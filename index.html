@@ -75,65 +75,33 @@
         </div>
 
         <!--
-          To add a cover image: put a file in assets/work/ and set
-          style="--img:url('assets/work/your-file.jpg')" on the .cover div.
-          Until then a placeholder pattern is shown.
+          Cover image: put a file in assets/work/ and set --img on the .cover div.
+          Case study: replace assets/case-studies/codexray.pdf with the real one.
         -->
-        <div class="case-grid">
-          <a class="case case-wide" href="#" data-case>
-            <div class="cover" style="--img:url('assets/work/codexray-triage.jpg')">
-              <div class="ph-ui">
-                <div class="ph-bar"></div>
-                <div class="ph-row"><i></i><i></i><i></i></div>
-                <div class="ph-chart"></div>
-              </div>
-              <span class="badge">17 → 10 steps</span>
+        <a class="feature" href="assets/case-studies/codexray.pdf" target="_blank" rel="noopener">
+          <div class="cover" style="--img:url('assets/work/codexray.jpg')">
+            <div class="ph-ui">
+              <div class="ph-bar"></div>
+              <div class="ph-row"><i></i><i></i><i></i></div>
+              <div class="ph-chart"></div>
             </div>
-            <p class="num">01</p>
-            <h3>Application-first triage: re-architecting how SREs find what's broken</h3>
-            <p class="tags">Information Architecture · Task &amp; Flow Analysis · Heuristic Audit · Dashboard Design</p>
-          </a>
-
-          <a class="case" href="#" data-case>
-            <div class="cover" style="--img:url('assets/work/codexray-agentic.jpg')">
-              <div class="ph-ui"><div class="ph-bar"></div><div class="ph-lines"><i></i><i></i><i></i><i></i></div></div>
-              <span class="badge">AI · Agentic SRE</span>
+            <span class="badge">🏆 Best Product — CIO Conclave 2025</span>
+          </div>
+          <div class="feature-body">
+            <div>
+              <p class="num">CASE STUDY</p>
+              <h3>From pitch prototype to the platform the company sells with</h3>
+              <p class="tags">Information Architecture · Design System · Agentic AI · Data Visualization</p>
+              <span class="read-link">Read case study ↗</span>
             </div>
-            <p class="num">02</p>
-            <h3>Designing trust into an AI investigator</h3>
-            <p class="tags">Agentic AI · LLM UX · Product Specification</p>
-          </a>
-
-          <a class="case" href="#" data-case>
-            <div class="cover" style="--img:url('assets/work/codexray-api-security.jpg')">
-              <div class="ph-ui"><div class="ph-bar"></div><div class="ph-row"><i></i><i></i></div><div class="ph-lines"><i></i><i></i><i></i></div></div>
-              <span class="badge">Shipped to 2 clients</span>
-            </div>
-            <p class="num">03</p>
-            <h3>API Security MVP: shadow APIs, PII exposure &amp; OWASP risk</h3>
-            <p class="tags">0 → 1 · Enterprise SaaS · Data Visualization</p>
-          </a>
-
-          <a class="case" href="#" data-case>
-            <div class="cover" style="--img:url('assets/work/codexray-design-system.jpg')">
-              <div class="ph-ui ph-swatches"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-              <span class="badge">Light + Dark</span>
-            </div>
-            <p class="num">04</p>
-            <h3>A design system for flame graphs, heatmaps &amp; severity states</h3>
-            <p class="tags">Design Systems · Theming · Documentation</p>
-          </a>
-
-          <a class="case" href="#" data-case>
-            <div class="cover" style="--img:url('assets/work/codexray-brand.jpg')">
-              <div class="ph-ui ph-trophy">★</div>
-              <span class="badge">Award winner</span>
-            </div>
-            <p class="num">05</p>
-            <h3>The product that replaced the sales deck</h3>
-            <p class="tags">Brand Identity · Demo Design · 20+ pitches</p>
-          </a>
-        </div>
+            <ul class="stats">
+              <li><b>17 → 10</b><span>steps to triage an SLO violation</span></li>
+              <li><b>3 → 1</b><span>views consolidated into one</span></li>
+              <li><b>20+</b><span>client pitches run on the live product</span></li>
+              <li><b>4+</b><span>enterprise clients</span></li>
+            </ul>
+          </div>
+        </a>
       </div>
     </section>
 
@@ -142,21 +110,21 @@
       <div class="wrap">
         <div class="section-head">
           <p class="label">// 02 — OTHER WORK</p>
-          <h2>Before CodeXray <span class="dim">— agency projects, experiments &amp; research.</span></h2>
+          <h2>More work <span class="dim">— agency projects &amp; research.</span></h2>
         </div>
 
         <div class="proj-grid">
-          <a class="proj" href="#">
+          <a class="proj" href="assets/case-studies/pvt-merit-labs.pdf" target="_blank" rel="noopener">
             <div class="cover light" style="--img:url('assets/work/pvt-merit-labs.jpg')"></div>
             <h3>PVT MERIT LABS</h3>
             <p class="mono">NEOINTERACTION / UX DISCOVERY / WORKFLOWS / 2025</p>
           </a>
-          <a class="proj tall" href="#">
+          <a class="proj tall" href="assets/case-studies/nirmaanxd-geojit.pdf" target="_blank" rel="noopener">
             <div class="cover light" style="--img:url('assets/work/nirmaanxd.jpg')"></div>
             <h3>NIRMAANXD &amp; GEOJIT REDESIGN</h3>
             <p class="mono">NEOINTERACTION / INFORMATION ARCHITECTURE / 2025</p>
           </a>
-          <a class="proj" href="#">
+          <a class="proj" href="assets/case-studies/software-marketplace.pdf" target="_blank" rel="noopener">
             <div class="cover light" style="--img:url('assets/work/marketplace.jpg')"></div>
             <h3>SOFTWARE MARKETPLACE</h3>
             <p class="mono">NEOINTERACTION / ONBOARDING / PLUGIN DISCOVERY / 2025</p>
@@ -239,20 +207,19 @@
           Edit the caption text under each polaroid.
         -->
         <div class="polaroids">
-          <figure class="polaroid" style="--r:-6deg;--img:url('assets/life/photo-1.jpg')"><div class="pic"></div><figcaption>hobby #1</figcaption></figure>
-          <figure class="polaroid" style="--r:4deg;--img:url('assets/life/photo-2.jpg')"><div class="pic"></div><figcaption>somewhere new</figcaption></figure>
-          <figure class="polaroid" style="--r:-2deg;--img:url('assets/life/photo-3.jpg')"><div class="pic"></div><figcaption>weekend thing</figcaption></figure>
-          <figure class="polaroid" style="--r:7deg;--img:url('assets/life/photo-4.jpg')"><div class="pic"></div><figcaption>a favourite</figcaption></figure>
-          <figure class="polaroid" style="--r:-4deg;--img:url('assets/life/photo-5.jpg')"><div class="pic"></div><figcaption>currently into</figcaption></figure>
+          <figure class="polaroid" style="--r:-6deg;--img:url('assets/life/sushi.jpg');--pos:50% 35%"><div class="pic"></div><figcaption>love the sushi</figcaption></figure>
+          <figure class="polaroid" style="--r:4deg;--img:url('assets/life/jeju.jpg');--pos:60% 40%"><div class="pic"></div><figcaption>Jeju tangerines</figcaption></figure>
+          <figure class="polaroid" style="--r:-2deg;--img:url('assets/life/gym.jpg');--pos:50% 40%"><div class="pic"></div><figcaption>gym lover</figcaption></figure>
+          <figure class="polaroid" style="--r:6deg;--img:url('assets/life/ukulele.jpg');--pos:50% 40%"><div class="pic"></div><figcaption>current hobby: ukulele</figcaption></figure>
+          <figure class="polaroid" style="--r:-4deg;--img:url('assets/life/holi.jpg');--pos:50% 30%"><div class="pic"></div><figcaption>need some colours</figcaption></figure>
         </div>
 
-        <!-- Replace the handles / URLs with your Instagram accounts -->
         <div class="insta-row">
-          <a class="insta" href="https://instagram.com/your.handle" target="_blank" rel="noopener">
-            <span class="insta-ico">◎</span> @your.handle <span class="dim">— everyday</span>
+          <a class="insta" href="https://instagram.com/empty__states" target="_blank" rel="noopener">
+            <span class="insta-ico">◎</span> @empty__states <span class="dim">— design page</span>
           </a>
-          <a class="insta" href="https://instagram.com/your.art.handle" target="_blank" rel="noopener">
-            <span class="insta-ico">◎</span> @your.art.handle <span class="dim">— hobby page</span>
+          <a class="insta" href="https://instagram.com/waqfa.arsh" target="_blank" rel="noopener">
+            <span class="insta-ico">◎</span> @waqfa.arsh <span class="dim">— ukulele journey</span>
           </a>
         </div>
       </div>

@@ -38,7 +38,7 @@ const sectionObserver = new IntersectionObserver((entries) => {
 sections.forEach((s) => s && sectionObserver.observe(s));
 
 // Reveal-on-scroll for cards, headings and the career trace
-const revealTargets = document.querySelectorAll('.section-head, .case, .proj, .about-text, .trace, .polaroids, .insta-row');
+const revealTargets = document.querySelectorAll('.section-head, .feature, .proj, .about-text, .trace, .polaroids, .insta-row');
 revealTargets.forEach((el) => el.classList.add('reveal'));
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((e) => {

@@ -12,7 +12,7 @@ document.querySelectorAll('.copy-email').forEach((btn) => {
     const email = btn.dataset.email;
     try {
       await navigator.clipboard.writeText(email);
-      showToast('Email copied ✓');
+      showToast(`Email copied — ${email}`);
     } catch {
       window.location.href = `mailto:${email}`;
     }

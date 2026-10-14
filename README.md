@@ -5,10 +5,10 @@ A static site (plain HTML/CSS/JS, no build step). Open `index.html` in a browser
 ## Editing content
 - **Text**: everything is in `index.html`, one commented block per section
   (Hero → Current work → Other work → About → Off the clock → Contact).
-- **Case studies**: replace the placeholder PDFs in `assets/case-studies/` (keep the filenames,
-  or update the links in `index.html`).
-- **Case study covers**: add images to `assets/work/` using the filenames already referenced
-  (e.g. `codexray.jpg`). Until a file exists, a placeholder is shown.
+- **Projects**: each card in the "Other work" section links to `assets/case-studies/<name>.pdf`
+  (placeholders for now — replace them keeping the filenames) and shows `assets/work/<name>.webp`.
+- **Covers**: the originals live in `assets/*Cover.*`; the site uses compressed copies in `assets/work/`
+  (~600 KB total instead of ~12 MB). When you change a cover, export a `.webp` around 1200px wide into `assets/work/`.
 - **Personal photos**: live in `assets/life/`; captions and crop position (`--pos`) are set on each polaroid.
 - **Résumé**: replace `assets/Arshdeep_Kaur_Resume.pdf` (keep the filename).
 - **Career timeline**: each `.span` has `--s` (start) and `--e` (end) in years since 2014.

@@ -147,11 +147,11 @@ section { padding: clamp(80px, 12vw, 150px) 0; }
 .feature:hover .read-link { border-color: #f2f0eb; background: #f2f0eb; color: var(--dark); }
 .cover {
   position: relative; border-radius: var(--radius); overflow: hidden;
-  background: var(--img, none) center / cover no-repeat, linear-gradient(135deg, #1d1d20, #121214);
+  background: var(--img, none) var(--pos, center) / cover no-repeat, linear-gradient(135deg, #1d1d20, #121214);
   border: 1px solid var(--dark-line);
   transition: transform .5s cubic-bezier(.2,.7,.2,1);
 }
-.feature:hover .cover, .proj:hover .cover { transform: scale(.985); }
+.feature:hover .cover { transform: scale(.985); }
 .badge {
   position: absolute; top: 16px; left: 16px; z-index: 1;
   font-family: var(--mono); font-size: 12px; letter-spacing: .04em;
@@ -163,35 +163,22 @@ section { padding: clamp(80px, 12vw, 150px) 0; }
 .feature h3 { font-size: clamp(26px, 3vw, 40px); line-height: 1.1; letter-spacing: -.025em; font-weight: 500; margin-top: 10px; }
 .tags { color: var(--dark-dim); margin-top: 14px; font-size: 16px; }
 
-/* Placeholder "UI" shown until a real cover image is added */
-.ph-ui { position: absolute; inset: 14% 10% 0 10%; border-radius: 12px 12px 0 0; background: #1f1f23; border: 1px solid #2f2f34; border-bottom: 0; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-.cover[style*="url"] .ph-ui { z-index: 0; }
-.ph-bar { height: 10px; width: 40%; background: #34343a; border-radius: 4px; }
-.ph-row { display: flex; gap: 10px; }
-.ph-row i { flex: 1; height: 44px; border-radius: 8px; background: #29292e; }
-.ph-row i:first-child { background: linear-gradient(90deg, rgba(229,72,45,.35), #29292e); }
-.ph-chart { flex: 1; border-radius: 8px; background:
-  linear-gradient(transparent 70%, rgba(63,185,80,.25) 70%) 0 0 / 6% 100%,
-  repeating-linear-gradient(90deg, #29292e 0 3%, transparent 3% 6%);
-  min-height: 60px;
-}
-
 /* ───────────── Other work ───────────── */
-.proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 28px; align-items: start; }
-.proj .cover.light {
-  aspect-ratio: 4 / 3; border: 1px solid var(--line);
-  background: var(--img, none) center / cover no-repeat,
-    repeating-linear-gradient(45deg, var(--paper-2) 0 12px, #e5ddcf 12px 24px);
+.proj-grid { columns: 3; column-gap: 28px; }
+.proj { display: block; break-inside: avoid; margin-bottom: 44px; }
+.shot {
+  border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);
+  background: var(--paper-2); transition: transform .5s cubic-bezier(.2,.7,.2,1);
 }
-.proj.tall { grid-row: span 2; }
-.proj.tall .cover.light { aspect-ratio: 3 / 4.4; }
-.proj h3 { font-family: var(--mono); font-weight: 500; font-size: 15px; letter-spacing: .04em; margin-top: 18px; }
+.shot img { display: block; width: 100%; height: auto; }
+.shot.portrait { aspect-ratio: 4 / 5; display: flex; justify-content: center; padding-top: 6%; background: linear-gradient(160deg, #e7e2f7, #d9d3ee); }
+.shot.portrait img { width: auto; height: 100%; border-radius: 22px 22px 0 0; box-shadow: 0 20px 40px -20px rgba(0,0,0,.4); }
+.proj:hover .shot { transform: scale(.985); }
+.proj h3 { font-family: var(--mono); font-weight: 500; font-size: 15px; letter-spacing: .04em; margin-top: 16px; }
+.proj:hover h3 { color: var(--accent); }
 .proj .mono { color: var(--dim); margin-top: 6px; font-size: 12px; }
-.paper { display: flex; align-items: center; justify-content: center; }
-.paper-title {
-  background: #fff; padding: 28px 24px; width: 72%; box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  font-family: var(--serif); font-size: 20px; line-height: 1.25; transform: rotate(-2deg);
-}
+.text-link { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
+.text-link:hover { text-decoration-color: var(--accent); }
 
 /* ───────────── About + Trace ───────────── */
 .about { background: var(--paper-2); }
@@ -303,14 +290,12 @@ section { padding: clamp(80px, 12vw, 150px) 0; }
 @media (max-width: 900px) {
   .feature .cover { aspect-ratio: 16 / 10; }
   .feature-body { grid-template-columns: 1fr; gap: 28px; }
-  .proj-grid { grid-template-columns: 1fr 1fr; }
-  .proj.tall { grid-row: auto; }
-  .proj.tall .cover.light { aspect-ratio: 4 / 3; }
+  .proj-grid { columns: 2; }
   .about-cols { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .status { display: none; }
-  .proj-grid { grid-template-columns: 1fr; }
+  .proj-grid { columns: 1; }
   .dock a { padding: 8px 10px; font-size: 13px; }
   .dock a[href="#life"] { display: none; }
   .polaroid { margin: 0 -10px 18px; width: 44vw; }

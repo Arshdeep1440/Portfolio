@@ -15,7 +15,7 @@
   <!-- ───────────── TOP BAR ───────────── -->
   <header class="topbar">
     <a href="#top" class="logo">Arshdeep Kaur<span class="logo-dot">.</span></a>
-    <div class="status"><span class="pulse"></span> Open to work · Bangalore / Remote</div>
+    <div class="status"><span class="pulse"></span> Open to work · Bangalore / In-office / Remote</div>
   </header>
 
   <main id="top">
@@ -34,7 +34,7 @@
       </p>
 
       <div class="cta-row">
-        <a class="btn btn-primary" href="assets/Arshdeep_Kaur_Resume.pdf" download>
+        <a class="btn btn-primary" href="assets/Arshdeep_Kaur_Resume.pdf" target="_blank" rel="noopener">
           Download résumé <span aria-hidden="true">↓</span>
         </a>
         <a class="btn" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">
@@ -45,22 +45,36 @@
         </button>
       </div>
 
-      <!-- Proof ticker: the numbers an interviewer should remember -->
-      <div class="ticker" aria-label="Highlights">
+      <!-- What I design for: domains & skills -->
+      <div class="ticker" aria-label="What I design for">
         <div class="ticker-track">
-          <span>🏆 Best Product — Agentic SRE &amp; Observability, CIO Conclave 2025</span>
-          <span>SLO triage: <b>17 → 10 steps</b></span>
-          <span>First design hire · pitch prototype → live enterprise platform</span>
-          <span><b>20+</b> client pitches run on the product I designed</span>
-          <span><b>4+</b> enterprise clients</span>
-          <span>3.5 yrs engineering at Intel before design</span>
+          <span>Observability</span>
+          <span>APM &amp; Distributed Tracing</span>
+          <span>API Security</span>
+          <span>Agentic AI</span>
+          <span>Design Systems</span>
+          <span>Data Visualization</span>
+          <span>Information Architecture</span>
+          <span>Enterprise SaaS</span>
+          <span>Dashboard &amp; Workflow Design</span>
+          <span>Interaction Design</span>
+          <span>Prototyping</span>
+          <span>Heuristic Evaluation</span>
+          <span>Systems Thinking</span>
           <!-- duplicated for seamless loop -->
-          <span aria-hidden="true">🏆 Best Product — Agentic SRE &amp; Observability, CIO Conclave 2025</span>
-          <span aria-hidden="true">SLO triage: <b>17 → 10 steps</b></span>
-          <span aria-hidden="true">First design hire · pitch prototype → live enterprise platform</span>
-          <span aria-hidden="true"><b>20+</b> client pitches run on the product I designed</span>
-          <span aria-hidden="true"><b>4+</b> enterprise clients</span>
-          <span aria-hidden="true">3.5 yrs engineering at Intel before design</span>
+          <span aria-hidden="true">Observability</span>
+          <span aria-hidden="true">APM &amp; Distributed Tracing</span>
+          <span aria-hidden="true">API Security</span>
+          <span aria-hidden="true">Agentic AI</span>
+          <span aria-hidden="true">Design Systems</span>
+          <span aria-hidden="true">Data Visualization</span>
+          <span aria-hidden="true">Information Architecture</span>
+          <span aria-hidden="true">Enterprise SaaS</span>
+          <span aria-hidden="true">Dashboard &amp; Workflow Design</span>
+          <span aria-hidden="true">Interaction Design</span>
+          <span aria-hidden="true">Prototyping</span>
+          <span aria-hidden="true">Heuristic Evaluation</span>
+          <span aria-hidden="true">Systems Thinking</span>
         </div>
       </div>
     </section>
@@ -234,11 +248,11 @@
           Edit the caption text under each polaroid.
         -->
         <div class="polaroids">
-          <figure class="polaroid" style="--r:-6deg;--img:url('assets/life/sushi.jpg');--pos:50% 35%"><div class="pic"></div><figcaption>love the sushi</figcaption></figure>
-          <figure class="polaroid" style="--r:4deg;--img:url('assets/life/jeju.jpg');--pos:60% 40%"><div class="pic"></div><figcaption>Jeju tangerines</figcaption></figure>
-          <figure class="polaroid" style="--r:-2deg;--img:url('assets/life/gym.jpg');--pos:50% 40%"><div class="pic"></div><figcaption>gym lover</figcaption></figure>
-          <figure class="polaroid" style="--r:6deg;--img:url('assets/life/ukulele.jpg');--pos:50% 40%"><div class="pic"></div><figcaption>current hobby: ukulele</figcaption></figure>
-          <figure class="polaroid" style="--r:-4deg;--img:url('assets/life/holi.jpg');--pos:50% 30%"><div class="pic"></div><figcaption>need some colours</figcaption></figure>
+          <figure class="polaroid" style="--r:-6deg;--img:url('assets/life/sushi.jpg');--pos:50% 35%"><div class="pic"></div><figcaption>user-testing sushi</figcaption></figure>
+          <figure class="polaroid" style="--r:4deg;--img:url('assets/life/jeju.jpg');--pos:60% 40%"><div class="pic"></div><figcaption>field research in Jeju</figcaption></figure>
+          <figure class="polaroid" style="--r:-2deg;--img:url('assets/life/gym.jpg');--pos:50% 40%"><div class="pic"></div><figcaption>pushing weights, not pixels</figcaption></figure>
+          <figure class="polaroid" style="--r:6deg;--img:url('assets/life/ukulele.jpg');--pos:50% 40%"><div class="pic"></div><figcaption>iterating on chords</figcaption></figure>
+          <figure class="polaroid" style="--r:-4deg;--img:url('assets/life/holi.jpg');--pos:50% 30%"><div class="pic"></div><figcaption>switching off dark mode</figcaption></figure>
         </div>
 
         <div class="insta-row">
@@ -258,9 +272,9 @@
         <p class="label">// LET'S TALK</p>
         <h2 class="contact-title">Building something <em>engineers</em> have to live in?</h2>
         <div class="cta-row">
-          <a class="btn btn-primary light" href="mailto:arshdeep24kaur@gmail.com?subject=Hi%20Arshdeep%20—%20saw%20your%20portfolio">Email me ↗</a>
+          <button class="btn btn-primary light copy-email" data-email="arshdeep24kaur@gmail.com">Email me <span aria-hidden="true">⧉</span></button>
           <a class="btn light-outline" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">LinkedIn ↗</a>
-          <a class="btn light-outline" href="assets/Arshdeep_Kaur_Resume.pdf" download>Résumé ↓</a>
+          <a class="btn light-outline" href="assets/Arshdeep_Kaur_Resume.pdf" target="_blank" rel="noopener">Résumé ↓</a>
         </div>
         <footer class="foot mono">
           <span>© 2026 Arshdeep Kaur</span>
@@ -276,7 +290,7 @@
     <a href="#projects">Projects</a>
     <a href="#about">About</a>
     <a href="#life">Life</a>
-    <a class="dock-cta" href="assets/Arshdeep_Kaur_Resume.pdf" download>Résumé ↓</a>
+    <a class="dock-cta" href="assets/Arshdeep_Kaur_Resume.pdf" target="_blank" rel="noopener">Résumé ↓</a>
   </nav>
 
   <div class="toast" role="status" aria-live="polite"></div>

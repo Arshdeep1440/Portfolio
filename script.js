@@ -19,6 +19,33 @@ document.querySelectorAll('.copy-email').forEach((btn) => {
   });
 });
 
+// Projects grid: place cards left-to-right (CSS columns alone fill top-to-bottom),
+// each card going into the currently shortest column, so the first cards sit on the top row
+const projGrid = document.querySelector('.proj-grid');
+if (projGrid) {
+  const cards = [...projGrid.querySelectorAll('.proj')];
+  const colCount = () => (innerWidth <= 600 ? 1 : innerWidth <= 900 ? 2 : 3);
+  let laidOut = 0;
+  const layoutProjects = () => {
+    const n = colCount();
+    if (n === laidOut) return;
+    laidOut = n;
+    projGrid.classList.add('js-masonry');
+    projGrid.replaceChildren();
+    const cols = Array.from({ length: n }, () => projGrid.appendChild(Object.assign(document.createElement('div'), { className: 'proj-col' })));
+    const heights = new Array(n).fill(0);
+    cards.forEach((card) => {
+      const img = card.querySelector('img');
+      const ratio = img ? img.getAttribute('height') / img.getAttribute('width') : 1;
+      const i = heights.indexOf(Math.min(...heights));
+      cols[i].appendChild(card);
+      heights[i] += ratio + 0.25; // + caption
+    });
+  };
+  layoutProjects();
+  addEventListener('resize', layoutProjects);
+}
+
 // Show the floating dock once the hero is scrolled past
 const dock = document.querySelector('.dock');
 const hero = document.querySelector('.hero');

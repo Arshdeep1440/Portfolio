@@ -10,6 +10,9 @@ A static site (plain HTML/CSS/JS, no build step). Open `index.html` in a browser
   to `.webp` with the same name (`01.webp` … `09.webp`); to add one, add a matching `<img>` line in `codexray.html`.
 - **Hoomanely case study**: `hoomanely.html` is a written case study (text in HTML, styled by `case-study.css`);
   screens live in `assets/case-studies/hoomanely-web/`. `case-study.css` can be reused for future written case studies.
+- **byteSafe case study**: `bytesafe.html` shows the single tall design from `assets/case-studies/byteSafe/`,
+  sliced into `assets/case-studies/bytesafe-web/01.webp` … `07.webp` (very tall images can't be one web image).
+- **Project order**: the "Other work" cards appear left-to-right in the order they're listed in `index.html`.
 - **Projects**: each card in the "Other work" section links to `assets/case-studies/<name>.pdf`
   (placeholders for now — replace them keeping the filenames) and shows `assets/work/<name>.webp`.
 - **Covers**: the originals live in `assets/*Cover.*`; the site uses compressed copies in `assets/work/`

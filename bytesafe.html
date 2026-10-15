@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>byteSafe Case Study — Arshdeep Kaur</title>
+  <meta name="description" content="byteSafe: a smart local storage app — a case study by Arshdeep Kaur, from paper planning to hi-fidelity screens." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="case-study.css" />
+  <style>
+    body.bytesafe { background: #f1f0f5; }
+    .bytesafe .cs-bar { background: rgba(241,240,245,.88); }
+
+    /* One tall design, sliced into sections that overlap by 4px (of 1400)
+       so no hairline seams show between them at any width */
+    .long { max-width: 1400px; margin: 0 auto; }
+    .long img { display: block; width: 100%; height: auto; }
+    .long img + img { margin-top: -0.2857%; }
+  </style>
+</head>
+<body class="bytesafe">
+
+  <header class="cs-bar">
+    <a class="back" href="index.html">← Arshdeep Kaur</a>
+    <span class="title">BYTESAFE · CASE STUDY</span>
+    <a class="btn" href="assets/Arshdeep_Kaur_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+  </header>
+
+  <!-- Slices live in assets/case-studies/bytesafe-web/ (from assets/case-studies/byteSafe/byteSafe Case Study.jpg) -->
+  <main class="long">
+    <img src="assets/case-studies/bytesafe-web/01.webp" width="1400" height="3040" alt="byteSafe, smart local storage: overview of the problem, the limits of cloud storage and the solution, followed by pen and paper planning" />
+    <img src="assets/case-studies/bytesafe-web/02.webp" width="1400" height="3044" alt="Information architecture and low-fidelity wireframes" loading="lazy" />
+    <img src="assets/case-studies/bytesafe-web/03.webp" width="1400" height="3044" alt="Mid-fidelity wireframes" loading="lazy" />
+    <img src="assets/case-studies/bytesafe-web/04.webp" width="1400" height="3044" alt="Mid-fidelity wireframes and style guide: colour palette and typography" loading="lazy" />
+    <img src="assets/case-studies/bytesafe-web/05.webp" width="1400" height="3044" alt="Icons and components" loading="lazy" />
+    <img src="assets/case-studies/bytesafe-web/06.webp" width="1400" height="3044" alt="Hi-fidelity screens: storage overview, albums, documents and camera" loading="lazy" />
+    <img src="assets/case-studies/bytesafe-web/07.webp" width="1400" height="3037" alt="More hi-fidelity screens and discarded iterations" loading="lazy" />
+  </main>
+
+  <section class="cs-end dark">
+    <p class="label">// THANKS FOR READING</p>
+    <h2>Want to talk about <em>this</em> project?</h2>
+    <div class="cta-row">
+      <button class="btn btn-primary light copy-email" data-email="arshdeep24kaur@gmail.com">Email me <span aria-hidden="true">⧉</span></button>
+      <a class="btn light-outline" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn light-outline" href="index.html#projects">See other work →</a>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Copy email to clipboard (same behaviour as the home page)
+    const toast = document.querySelector('.toast');
+    document.querySelectorAll('.copy-email').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const email = btn.dataset.email;
+        try {
+          await navigator.clipboard.writeText(email);
+          toast.textContent = `Email copied — ${email}`;
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        } catch {
+          window.location.href = `mailto:${email}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

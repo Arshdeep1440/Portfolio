@@ -165,6 +165,8 @@ section { padding: clamp(80px, 12vw, 150px) 0; }
 
 /* ───────────── Other work ───────────── */
 .proj-grid { columns: 3; column-gap: 28px; }
+.proj-grid.js-masonry { display: flex; gap: 28px; align-items: flex-start; }
+.proj-col { flex: 1; min-width: 0; }
 .proj { display: block; break-inside: avoid; margin-bottom: 44px; }
 .shot {
   border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line);

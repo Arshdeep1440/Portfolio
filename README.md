@@ -20,7 +20,7 @@ A static site (plain HTML/CSS/JS, no build step). Open `index.html` in a browser
 - **Covers**: the originals live in `assets/*Cover.*`; the site uses compressed copies in `assets/work/`
   (~600 KB total instead of ~12 MB). When you change a cover, export a `.webp` around 1200px wide into `assets/work/`.
 - **Personal photos**: live in `assets/life/`; captions and crop position (`--pos`) are set on each polaroid.
-- **Résumé**: replace `assets/Arshdeep_Kaur_Resume.pdf` (keep the filename).
+- **Résumé**: replace `assets/Arshdeep_Kaur_CV.pdf` (keep the filename).
 - **Career timeline**: each `.span` has `--s` (start) and `--e` (end) in years since 2014.
 
 ## Deploying

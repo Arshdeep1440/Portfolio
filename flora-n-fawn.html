@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flora &amp; Fawn Case Study — Arshdeep Kaur</title>
+  <meta name="description" content="Flora & Fawn: an organic skincare storefront and the component states behind it — a case study by Arshdeep Kaur." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="case-study.css" />
+  <style>
+    /* ── Flora & Fawn page ── */
+    :root { --ff-cream: #f2f1ec; --ff-gold: #a8823f; }
+
+    /* Browser frame around the full landing page */
+    .browser { border-radius: 18px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: 0 40px 80px -40px rgba(60,45,20,.35); }
+    .browser-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #ebe7de; border-bottom: 1px solid var(--line); }
+    .browser-bar i { width: 11px; height: 11px; border-radius: 50%; background: #d6cfc2; }
+    .browser-bar span { margin-left: 12px; font-family: var(--mono); font-size: 12px; color: var(--dim); background: #f6f3ec; padding: 5px 14px; border-radius: 999px; }
+    .browser img { display: block; width: 100%; height: auto; }
+
+    /* Demo stage */
+    .demo { background: var(--ff-cream); border: 1px solid var(--line); border-radius: 24px; padding: clamp(20px, 4vw, 44px); margin-top: 24px; }
+    .try { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ff-gold); margin-bottom: 18px; }
+    .try::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ff-gold); animation: ping 2s infinite; }
+    .demo h3 { margin-top: 0; }
+    .sub-head { margin-top: clamp(48px, 7vw, 80px); }
+    .sub-head h3 { font-size: clamp(24px, 2.6vw, 30px); letter-spacing: -.02em; margin: 6px 0 8px; }
+    .sub-head .k { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; color: var(--accent); }
+
+    /* Default → hover swap, built from the exported Figma states */
+    .swap { position: relative; display: block; cursor: pointer; transition: transform .35s ease; }
+    .swap img { display: block; width: 100%; height: auto; transition: opacity .35s ease; }
+    .swap img.alt { position: absolute; inset: 0; opacity: 0; }
+    .swap:hover img.alt, .swap:focus-visible img.alt, .swap.on img.alt { opacity: 1; }
+    .swap:focus-visible { outline: 2px solid var(--ff-gold); outline-offset: 4px; border-radius: 14px; }
+
+    /* Same two-column arrangement as the landing page's collections grid */
+    .bento { display: flex; align-items: flex-start; }
+    .bento-col { min-width: 0; display: flex; flex-direction: column; }
+    .bento-row { display: flex; align-items: flex-start; }
+    .bento-row .swap { min-width: 0; }
+    .cards4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+    .cards4 .swap:hover, .cards4 .swap.on { transform: translateY(-6px); }
+
+    /* Small states */
+    .states { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .state-box { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 18px; min-height: 190px; }
+    .state-box .k { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--dim); text-transform: uppercase; }
+    .state-box p { font-size: 14px; color: var(--ink-2); text-align: center; margin: 0; line-height: 1.45; }
+    .state-box .swap.btn-demo { width: 180px; }
+    .state-box .swap.nav-demo { width: 92px; }
+    .heart-btn { width: 44px; height: 50px; border: 0; background: none; padding: 0; position: relative; cursor: pointer; }
+    .heart-btn img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity .2s, transform .2s; }
+    .heart-btn .alt { opacity: 0; }
+    .heart-btn[aria-pressed="true"] .alt { opacity: 1; }
+    .heart-btn[aria-pressed="true"] .base { opacity: 0; }
+    .heart-btn:active img { transform: scale(.85); }
+
+    /* Mega menu demo */
+    .mini-nav { display: flex; flex-wrap: wrap; gap: 4px 26px; padding: 14px 20px; background: #fff; border-radius: 14px 14px 0 0; border: 1px solid var(--line); border-bottom: 0; font-size: 15px; }
+    .mini-nav button { font: inherit; padding: 6px 0; color: var(--ink-2); border-bottom: 2px solid transparent; }
+    .mini-nav button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+    .menu-panel { background: #fefdf6; border: 1px solid var(--line); border-radius: 0 0 14px 14px; min-height: 260px; display: flex; align-items: flex-start; }
+    .menu-panel img { display: none; height: auto; max-width: 100%; }
+    .menu-panel img.show { display: block; }
+
+    /* Carousel demo */
+    .carousel { position: relative; }
+    .carousel img { display: block; width: 100%; height: auto; transition: opacity .5s ease; }
+    .carousel img + img { position: absolute; inset: 0; }
+    .carousel img:not(.show) { opacity: 0; }
+    .carousel .hit { position: absolute; top: 0; bottom: 12%; width: 8%; }
+    .carousel .hit.prev { left: 0; } .carousel .hit.next { right: 0; }
+
+    /* Live announcement marquee */
+    .announce { background: #000; color: #fff; overflow: hidden; border-radius: 10px; }
+    .announce-track { display: flex; width: max-content; animation: scroll 22s linear infinite; padding: 11px 0; font-weight: 600; font-size: 15px; letter-spacing: .02em; text-transform: uppercase; }
+    .announce-track span { padding-right: 40px; white-space: nowrap; }
+    .announce:hover .announce-track { animation-play-state: paused; }
+
+    .testimonials img { display: block; width: 100%; height: auto; }
+
+    @media (max-width: 860px) {
+      .bento { flex-direction: column; }
+      .bento-col { width: 100%; }
+      .cards4 { grid-template-columns: repeat(2, 1fr); }
+      .states { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { .announce-track { animation: none; } }
+  </style>
+</head>
+<body>
+
+  <header class="cs-bar">
+    <a class="back" href="index.html">← Arshdeep Kaur</a>
+    <span class="title">FLORA &amp; FAWN · CASE STUDY</span>
+    <a class="btn" href="assets/Arshdeep_Kaur_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+  </header>
+
+  <main>
+    <!-- ───────────── Hero ───────────── -->
+    <div class="cs-wrap cs-hero">
+      <p class="label">// WEB · E-COMMERCE · SKINCARE</p>
+      <h1>Flora <em>&amp;</em> Fawn</h1>
+      <p class="lede">
+        A storefront for an organic skincare brand: a calm, premium landing page, and the set of
+        reusable components behind it, with every hover, menu and carousel state designed rather than left to chance.
+      </p>
+      <dl class="cs-meta">
+        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
+        <div><dt>Platform</dt><dd>Desktop web · 1440</dd></div>
+        <div><dt>Scope</dt><dd>Landing page + component states</dd></div>
+        <div><dt>Built with</dt><dd>Figma components &amp; variants</dd></div>
+      </dl>
+    </div>
+
+    <!-- ───────────── 01 The page ───────────── -->
+    <section class="cs-section" style="padding-top:0">
+      <div class="cs-wrap">
+        <div class="browser">
+          <div class="browser-bar"><i></i><i></i><i></i><span>floraandfawn.com</span></div>
+          <img src="assets/case-studies/flora-n-fawn-web/landing.webp" width="1440" height="2838" alt="Flora & Fawn landing page: announcement bar, navigation, Eternal Radiance hero, bestsellers carousel, collections grid, testimonials and footer" />
+        </div>
+      </div>
+
+      <div class="cs-wrap cs-narrow" style="margin-top: clamp(56px, 8vw, 100px)">
+        <p class="label">// 01 — THE PAGE</p>
+        <h2>Calm and premium, but still a <em>working shop</em></h2>
+        <p>
+          Organic skincare sells on feeling: soft light, natural textures, a sense of care. But a storefront also has to
+          push offers, surface bestsellers and help people find the right product fast. The page balances both, top to bottom:
+        </p>
+        <ol class="notes">
+          <li><b>Announcement bar.</b> Time-limited offers and promo codes move through one slim strip instead of pop-ups.</li>
+          <li><b>Navigation.</b> Shop, Face, Eyes &amp; Lips and Body each open a mega menu; search, account and bag stay one click away.</li>
+          <li><b>Hero.</b> "Eternal Radiance Every Day" sets the tone: soft gold, generous space, one clear Shop Now.</li>
+          <li><b>Bestsellers.</b> A carousel of product cards with brand, price and a wishlist heart.</li>
+          <li><b>Collections.</b> An editorial photo grid; each tile reveals its collection name on hover.</li>
+          <li><b>Testimonials and footer.</b> Social proof, then every route out of the page, from guides to returns policy.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ───────────── 02 Components ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 02 — BUILT FROM COMPONENTS</p>
+          <h2>Every state, <em>designed</em></h2>
+          <p>
+            Each interactive piece was built as a Figma component with its states side by side: default and hover,
+            empty and saved, page one, two and three. The page is assembled from them, and the behaviour is
+            specified rather than guessed at. Below, those exact frames are wired up so you can try them.
+          </p>
+        </div>
+
+        <!-- Mega menus -->
+        <div class="sub-head">
+          <p class="k">NAVIGATION</p>
+          <h3>Mega menus, organised by how people shop</h3>
+          <p>Shop is grouped by product type, ingredient, concern and skin type, so people can start from whatever they already know. Face, Eyes &amp; Lips and Body split makeup from care.</p>
+        </div>
+        <div class="demo">
+          <p class="try">Pick a menu</p>
+          <div class="mini-nav" role="tablist" aria-label="Mega menus">
+            <button role="tab" aria-selected="true" data-menu="shop">Shop</button>
+            <button role="tab" aria-selected="false" data-menu="face">Face</button>
+            <button role="tab" aria-selected="false" data-menu="eyes-lips">Eyes &amp; Lips</button>
+            <button role="tab" aria-selected="false" data-menu="body">Body</button>
+          </div>
+          <div class="menu-panel">
+            <img class="show" data-menu="shop" src="assets/case-studies/flora-n-fawn-web/menu-shop.webp" width="1148" height="587" alt="Shop mega menu: shop by product type, ingredient, concern, skin type, and featured shops" />
+            <img data-menu="face" src="assets/case-studies/flora-n-fawn-web/menu-face.webp" width="574" height="587" alt="Face mega menu: makeup and skincare" />
+            <img data-menu="eyes-lips" src="assets/case-studies/flora-n-fawn-web/menu-eyes-lips.webp" width="574" height="587" alt="Eyes and Lips mega menu: eye makeup, eye care, lip makeup, lip care" />
+            <img data-menu="body" src="assets/case-studies/flora-n-fawn-web/menu-body.webp" width="861" height="587" alt="Body mega menu: bath, body care, hands and feet, grooming" />
+          </div>
+        </div>
+
+        <!-- Collections -->
+        <div class="sub-head">
+          <p class="k">COLLECTIONS</p>
+          <h3>Photography first, labels on intent</h3>
+          <p>At rest, the grid is pure photography. When you hover, the tile dims slightly and the collection name appears with an arrow, so the page stays calm until someone shows interest.</p>
+        </div>
+        <div class="demo">
+          <p class="try">Hover over a tile (or tap on mobile)</p>
+          <div class="bento">
+            <div class="bento-col" style="flex:675">
+              <span class="swap" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/tile-summer-tone.webp" width="675" height="357" alt="Summer Tone collection tile" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/tile-summer-tone-hover.webp" alt="" loading="lazy" /></span>
+              <div class="bento-row"><span class="swap" style="flex:403" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/tile-deep-repair.webp" width="403" height="357" alt="Deep Repair collection tile" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/tile-deep-repair-hover.webp" alt="" loading="lazy" /></span><span class="swap" style="flex:288" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/tile-night.webp" width="288" height="357" alt="Night collection tile" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/tile-night-hover.webp" alt="" loading="lazy" /></span></div>
+            </div>
+            <div class="bento-col" style="flex:710">
+              <div class="bento-row"><span class="swap" style="flex:440" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/tile-beach-pack.webp" width="440" height="478" alt="Beach Pack collection tile" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/tile-beach-pack-hover.webp" alt="" loading="lazy" /></span><span class="swap" style="flex:270" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/tile-sun-care.webp" width="270" height="478" alt="Sun Care collection tile" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/tile-sun-care-hover.webp" alt="" loading="lazy" /></span></div>
+              <span class="swap" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/tile-massage-therapy.webp" width="694" height="236" alt="Massage Therapy collection tile" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/tile-massage-therapy-hover.webp" alt="" loading="lazy" /></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product cards -->
+        <div class="sub-head">
+          <p class="k">PRODUCT CARDS</p>
+          <h3>One card, every product</h3>
+          <p>Image, name, brand and price in a fixed order, with the wishlist heart always in the same corner. On hover the card lifts with a soft shadow to show it's clickable.</p>
+        </div>
+        <div class="demo">
+          <p class="try">Hover over a card</p>
+          <div class="cards4">
+            <span class="swap" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/card-la-mousse.webp" width="352" height="330" alt="La Mousse by Chanel, Rs. 949" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/card-la-mousse-hover.webp" alt="" loading="lazy" /></span>
+            <span class="swap" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/card-serum.webp" width="352" height="330" alt="Serum de Beaute by Gucci, Rs. 949" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/card-serum-hover.webp" alt="" loading="lazy" /></span>
+            <span class="swap" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/card-lipstick.webp" width="352" height="330" alt="Powermatte Lipstick by Nars, Rs. 949" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/card-lipstick-hover.webp" alt="" loading="lazy" /></span>
+            <span class="swap" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/card-foundation.webp" width="352" height="330" alt="Weightless Foundation by Bobbi Brown, Rs. 949" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/card-foundation-hover.webp" alt="" loading="lazy" /></span>
+          </div>
+        </div>
+
+        <!-- Small states -->
+        <div class="sub-head">
+          <p class="k">SMALL STATES</p>
+          <h3>The details people feel before they notice</h3>
+        </div>
+        <div class="states">
+          <div class="state-box">
+            <span class="k">Button</span>
+            <span class="swap btn-demo" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/button.webp" width="196" height="80" alt="Shop Now button" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/button-hover.webp" alt="" loading="lazy" /></span>
+            <p>Soft cream at rest, solid black on hover: the one high-contrast moment is the action.</p>
+          </div>
+          <div class="state-box">
+            <span class="k">Wishlist</span>
+            <button class="heart-btn" aria-pressed="false" aria-label="Add to wishlist">
+              <img class="base" src="assets/case-studies/flora-n-fawn-web/heart.webp" alt="" />
+              <img class="alt" src="assets/case-studies/flora-n-fawn-web/heart-filled.webp" alt="" />
+            </button>
+            <p>Click the heart. Outline means not saved, filled means saved.</p>
+          </div>
+          <div class="state-box">
+            <span class="k">Nav link</span>
+            <span class="swap nav-demo" tabindex="0"><img src="assets/case-studies/flora-n-fawn-web/navlink.webp" width="70" height="31" alt="Home navigation link" loading="lazy" /><img class="alt" src="assets/case-studies/flora-n-fawn-web/navlink-hover.webp" alt="" loading="lazy" /></span>
+            <p>A simple underline on hover keeps the navigation quiet.</p>
+          </div>
+        </div>
+
+        <!-- Carousel -->
+        <div class="sub-head">
+          <p class="k">BESTSELLERS CAROUSEL</p>
+          <h3>Three pages, one smooth row</h3>
+          <p>Arrows appear only when there's somewhere to go, and the dots show which page you're on. The first page has no back arrow; the last has no next.</p>
+        </div>
+        <div class="demo">
+          <p class="try">Use the arrows</p>
+          <div class="carousel" data-carousel>
+            <img class="show" src="assets/case-studies/flora-n-fawn-web/carousel-1.webp" width="1370" height="356" alt="Bestsellers carousel, page 1" loading="lazy" />
+            <img src="assets/case-studies/flora-n-fawn-web/carousel-2.webp" width="1370" height="356" alt="Bestsellers carousel, page 2" />
+            <img src="assets/case-studies/flora-n-fawn-web/carousel-3.webp" width="1370" height="356" alt="Bestsellers carousel, page 3" />
+            <button class="hit prev" aria-label="Previous"></button>
+            <button class="hit next" aria-label="Next"></button>
+          </div>
+        </div>
+
+        <!-- Marquee -->
+        <div class="sub-head">
+          <p class="k">ANNOUNCEMENT BAR</p>
+          <h3>Urgency without clutter</h3>
+          <p>Offers loop continuously through a slim black strip at the top of every page. It pauses when you hover, so a promo code can actually be read.</p>
+        </div>
+        <div class="demo">
+          <p class="try">Hover to pause</p>
+          <div class="announce">
+            <div class="announce-track">
+              <span>🎁 24hrs only! Get retinol restorative new</span><span>Brand new checkout offer: neck cream for $25 · use code: FIRM</span>
+              <span aria-hidden="true">🎁 24hrs only! Get retinol restorative new</span><span aria-hidden="true">Brand new checkout offer: neck cream for $25 · use code: FIRM</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonials -->
+        <div class="sub-head">
+          <p class="k">TESTIMONIALS</p>
+          <h3>Social proof, kept consistent</h3>
+          <p>Every review uses the same card: photo, name, then the quote, so the eye reads them as a set rather than a wall of text.</p>
+        </div>
+        <div class="demo testimonials">
+          <img src="assets/case-studies/flora-n-fawn-web/testimonials.webp" width="1369" height="681" alt="Testimonial carousel component, two states" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 03 Decisions ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 03 — DESIGN DECISIONS</p>
+          <h2>Letting the products <em>breathe</em></h2>
+        </div>
+        <div class="learn">
+          <div><p class="n">01</p><h4>One quiet palette</h4><p>Cream, soft gold and plenty of white space carry the "organic" feeling. Black is saved for actions, so buttons stand out without shouting.</p></div>
+          <div><p class="n">02</p><h4>Calm until intent</h4><p>Labels, lifts and dark buttons appear on hover. The page stays editorial at a glance and becomes a shop when you reach for something.</p></div>
+          <div><p class="n">03</p><h4>Components before pages</h4><p>Designing each piece with its states first meant the landing page was assembled, not drawn, and every interaction was specified for handoff.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="cs-end dark">
+    <p class="label">// THANKS FOR READING</p>
+    <h2>Want to talk about <em>this</em> project?</h2>
+    <div class="cta-row">
+      <button class="btn btn-primary light copy-email" data-email="arshdeep24kaur@gmail.com">Email me <span aria-hidden="true">⧉</span></button>
+      <a class="btn light-outline" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn light-outline" href="index.html#projects">See other work →</a>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Copy email to clipboard (same behaviour as the home page)
+    const toast = document.querySelector('.toast');
+    document.querySelectorAll('.copy-email').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const email = btn.dataset.email;
+        try {
+          await navigator.clipboard.writeText(email);
+          toast.textContent = `Email copied — ${email}`;
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        } catch {
+          window.location.href = `mailto:${email}`;
+        }
+      });
+    });
+
+    // Hover demos: tap toggles the hover state on touch screens
+    document.querySelectorAll('.swap').forEach((el) => {
+      el.addEventListener('click', () => el.classList.toggle('on'));
+    });
+
+    // Wishlist heart
+    document.querySelectorAll('.heart-btn').forEach((btn) => {
+      btn.addEventListener('click', () => btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') !== 'true'));
+    });
+
+    // Mega menu tabs
+    const tabs = document.querySelectorAll('.mini-nav [data-menu]');
+    const panels = document.querySelectorAll('.menu-panel [data-menu]');
+    const showMenu = (name) => {
+      tabs.forEach((t) => t.setAttribute('aria-selected', t.dataset.menu === name));
+      panels.forEach((p) => p.classList.toggle('show', p.dataset.menu === name));
+    };
+    tabs.forEach((t) => {
+      t.addEventListener('click', () => showMenu(t.dataset.menu));
+      t.addEventListener('mouseenter', () => showMenu(t.dataset.menu));
+    });
+
+    // Bestsellers carousel: the exported page states, with working arrows
+    const car = document.querySelector('[data-carousel]');
+    const slides = car.querySelectorAll('img');
+    let page = 0;
+    const go = (i) => {
+      page = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, k) => s.classList.toggle('show', k === page));
+    };
+    car.querySelector('.prev').addEventListener('click', () => go(page - 1));
+    car.querySelector('.next').addEventListener('click', () => go(page + 1));
+  </script>
+</body>
+</html>

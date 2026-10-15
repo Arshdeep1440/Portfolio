@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CodeXray Case Study — Arshdeep Kaur</title>
+  <meta name="description" content="Unifying scattered application signals into one monitoring experience — a CodeXray case study by Arshdeep Kaur." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Case study page: dark background matching the slides */
+    body.case-page { background: #0f1016; color: #f2f0eb; }
+    .case-bar {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 14px var(--pad);
+      background: rgba(15,16,22,.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .case-bar .back { font-size: 15px; color: #cfcac1; transition: color .2s; }
+    .case-bar .back:hover { color: #fff; }
+    .case-bar .title { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--dark-dim); }
+    .case-bar .btn { padding: 9px 16px; font-size: 14px; border-color: #4a4a4f; color: #f2f0eb; }
+    .case-bar .btn:hover { border-color: #f2f0eb; box-shadow: 3px 3px 0 #f2f0eb; }
+
+    /* Slides are designed to run together as one continuous page */
+    .slides { max-width: 1440px; margin: 0 auto; }
+    .slides img { display: block; width: 100%; height: auto; }
+
+    .case-end { text-align: center; padding: clamp(64px, 10vw, 120px) var(--pad); }
+    .case-end h2 { font-size: clamp(30px, 4.5vw, 56px); font-weight: 600; letter-spacing: -.03em; line-height: 1.1; }
+    .case-end h2 em { color: var(--accent); }
+    .case-end .cta-row { justify-content: center; }
+
+    @media (max-width: 600px) {
+      .case-bar .title { display: none; }
+    }
+  </style>
+</head>
+<body class="case-page">
+
+  <header class="case-bar">
+    <a class="back" href="index.html">← Arshdeep Kaur</a>
+    <span class="title">CODEXRAY · CASE STUDY</span>
+    <a class="btn" href="assets/Arshdeep_Kaur_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+  </header>
+
+  <!-- Slides live in assets/case-studies/codexray-web/ (compressed copies of assets/case-studies/codexray/) -->
+  <main class="slides">
+    <img src="assets/case-studies/codexray-web/01.webp" width="1440" height="1637" alt="Designing for faster triage: unifying scattered application signals into one monitoring experience" />
+    <img src="assets/case-studies/codexray-web/02.webp" width="1440" height="2612" alt="Introduction: understanding the basics — users, telemetry data and the triage flow" loading="lazy" />
+    <img src="assets/case-studies/codexray-web/03.webp" width="1440" height="714" alt="Redesign framework: breaking the problem into three layers" loading="lazy" />
+    <img src="assets/case-studies/codexray-web/04.webp" width="1440" height="6151" alt="Level 1 problems and solution: application listing and meta information" loading="lazy" />
+    <img src="assets/case-studies/codexray-web/05.webp" width="1440" height="5935" alt="Level 2 problems and solution: applications detail overview" loading="lazy" />
+    <img src="assets/case-studies/codexray-web/06.webp" width="1440" height="1104" alt="Level 3: deeper triage path details (locked for confidentiality)" loading="lazy" />
+    <img src="assets/case-studies/codexray-web/07.webp" width="1440" height="2015" alt="Information architecture: how I structured the redesign" loading="lazy" />
+    <img src="assets/case-studies/codexray-web/08.webp" width="1440" height="4045" alt="User task analysis: reducing error insight efforts — 41% fewer clicks, 67% less screen-splitting, 20% fewer screens" loading="lazy" />
+    <img src="assets/case-studies/codexray-web/09.webp" width="1440" height="490" alt="Outcome: part of CodeXray's evolution into an enterprise-ready observability platform" loading="lazy" />
+  </main>
+
+  <section class="case-end">
+    <p class="label">// THANKS FOR READING</p>
+    <h2>Want to talk about <em>this</em> project?</h2>
+    <div class="cta-row">
+      <button class="btn btn-primary light copy-email" data-email="arshdeep24kaur@gmail.com">Email me <span aria-hidden="true">⧉</span></button>
+      <a class="btn light-outline" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn light-outline" href="index.html#projects">See other work →</a>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Copy email to clipboard (same behaviour as the home page)
+    const toast = document.querySelector('.toast');
+    document.querySelectorAll('.copy-email').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const email = btn.dataset.email;
+        try {
+          await navigator.clipboard.writeText(email);
+          toast.textContent = `Email copied — ${email}`;
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        } catch {
+          window.location.href = `mailto:${email}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

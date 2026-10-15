@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hoomanely: The First Thirty Days — Arshdeep Kaur</title>
+  <meta name="description" content="Designing a dog-health home screen for the thirty days before the product knows your dog — a case study by Arshdeep Kaur." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="case-study.css" />
+</head>
+<body>
+
+  <header class="cs-bar">
+    <a class="back" href="index.html">← Arshdeep Kaur</a>
+    <span class="title">HOOMANELY · CASE STUDY</span>
+    <a class="btn" href="assets/Arshdeep_Kaur_Resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+  </header>
+
+  <main>
+    <!-- ───────────── Hero ───────────── -->
+    <div class="cs-wrap cs-hero">
+      <p class="label">// DESIGN EXERCISE · MOBILE · DOG HEALTH</p>
+      <h1>The First <em>Thirty</em> Days</h1>
+      <p class="lede">
+        Hoomanely needs a month of a dog's data before it truly knows her.
+        How do you design a home screen for the thirty days when the product honestly can't say much yet,
+        without faking it and without making the owner feel they bought something that hasn't switched on?
+      </p>
+      <dl class="cs-meta">
+        <div><dt>Role</dt><dd>Product Designer (solo)</dd></div>
+        <div><dt>Time</dt><dd>5-hour design exercise</dd></div>
+        <div><dt>Platform</dt><dd>Mobile · 393 × 852</dd></div>
+        <div><dt>Scope</dt><dd>One home screen, three moments in time</dd></div>
+      </dl>
+    </div>
+
+    <div class="cs-wrap">
+      <div class="stage">
+        <figure><img src="assets/case-studies/hoomanely-web/day-1.webp" width="393" height="1134" alt="Home screen on Day 1" /><figcaption>DAY 1</figcaption></figure>
+        <figure><img src="assets/case-studies/hoomanely-web/day-6.webp" width="393" height="1226" alt="Home screen on Day 6" /><figcaption>DAY 6</figcaption></figure>
+        <figure><img src="assets/case-studies/hoomanely-web/day-30.webp" width="393" height="1410" alt="Home screen on Day 30" /><figcaption>DAY 30</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- ───────────── Context ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap cs-narrow">
+        <p class="label">// 01 — CONTEXT</p>
+        <h2>A product that can't be <em>rushed</em></h2>
+        <p>
+          Hoomanely is a health membership for dogs. A sensor-equipped bowl reads a dog's ordinary moments
+          (meals, water and rest) and builds a <strong>Living Baseline</strong>: a sense of what's normal for
+          that specific dog, updated as she ages.
+        </p>
+        <p>
+          The catch is physical, not technical. A baseline takes about <strong>thirty days</strong> of her data to form.
+          Before that, the system knows <em>dogs like her</em>, not <em>her</em>. Every honest company in this space
+          faces the same wait.
+        </p>
+        <blockquote class="pull">
+          "We will not fake day one, and we will not let a paying customer spend a month feeling like they bought something that hasn't switched on yet."
+          <cite>— THE BRIEF</cite>
+        </blockquote>
+        <p>
+          The job: design the app's home screen and show it at three points in time.
+          <strong>Day 1</strong>, hours after setup, when the system only knows breed, age, weight and location.
+          <strong>Day 6</strong>, when rhythms are emerging but not settled. And <strong>Day 30</strong>, when the baseline has formed.
+          Day 6 must not look like a broken Day 30. Each day should feel like the product working correctly <em>on that day</em>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────── Constraints ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 02 — THE CONSTRAINTS</p>
+          <h2>Show time passing, <em>without</em> a progress bar</h2>
+          <p>
+            The brief took away every tool a designer would normally reach for to say "please wait".
+            That's what made it interesting.
+          </p>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <p class="k">Banned patterns</p>
+            <h4>No countdowns</h4>
+            <p><span class="strike">Progress bars</span>, <span class="strike">% complete</span>, <span class="strike">ring fills</span>, <span class="strike">"Day 14 of 30"</span>, confetti, cartoon dogs, glassmorphism.</p>
+          </div>
+          <div class="card">
+            <p class="k">Claims</p>
+            <h4>No promises</h4>
+            <p>Never promise a date when something will be detected. Never imply the system diagnoses anything.</p>
+          </div>
+          <div class="card">
+            <p class="k">Voice</p>
+            <h4>Calm and precise</h4>
+            <p>Affection is allowed when talking about the dog, never when talking about the system, the data or the science.</p>
+          </div>
+        </div>
+        <div class="cards two">
+          <div class="card">
+            <p class="k">Copy</p>
+            <h4>Copy is half the exercise</h4>
+            <p>Real sentences at real lengths. No lorem ipsum, no placeholders. Words like <span class="strike">AI-powered</span>, <span class="strike">monitors</span>, <span class="strike">tracks</span>, <span class="strike">smart bowl</span> and <span class="strike">peace of mind</span> were off-limits.</p>
+          </div>
+          <div class="card">
+            <p class="k">The dog</p>
+            <h4>Meet Bella</h4>
+            <p>Four years old, Border Collie mix, lives in Denver. It's late October and the weather has turned. She's left two meals half-finished. Nothing is wrong with her.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── The rule ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 03 — THE RULE</p>
+          <h2>One screen, one rule: <em>who it's allowed to talk about</em></h2>
+          <p>
+            Instead of designing three screens, I designed one rule and let the three states fall out of it.
+            The layout never changes. What changes is how much the system has earned the right to say.
+          </p>
+        </div>
+        <div class="rule">
+          <p class="k">WHAT GOVERNS HOW THE SCREEN CHANGES</p>
+          <p>The surface never gains or loses a section. All three states carry the same four: her day, her last thirty meals, the reference, and the assistant. What changes is <em>who each sentence is about</em>, and <em>how strongly the system is entitled to speak</em>.</p>
+          <p>Day 1 speaks about dogs like her. Day 6 speaks about her only where something has actually repeated: her mornings, and nothing else yet. Day 30 speaks about her, against her own range.</p>
+          <p>Every element obeys that one permission. A badge fills when its number stops belonging to her breed and starts belonging to her. Her portrait resolves as the system learns her, and coarsens again when a season or an age shifts her patterns, so it never completes. Nothing counts toward thirty.</p>
+          <p>The assistant leads while the surface cannot speak, and recedes once it can.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── The three states ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 04 — THE THREE STATES</p>
+          <h2>Same screen, three levels of <em>confidence</em></h2>
+        </div>
+
+        <!-- Day 1 -->
+        <div class="state">
+          <div class="phone"><img src="assets/case-studies/hoomanely-web/day-1.webp" width="393" height="1134" alt="Day 1 home screen for Bella" loading="lazy" /></div>
+          <div>
+            <p class="day">DAY 1 · HOURS AFTER SETUP</p>
+            <h3>Designing the emptiness, not apologising for it</h3>
+            <span class="speaks">Speaks about: dogs like her</span>
+            <ol class="notes">
+              <li><b>Facts, no judgement.</b> <q>She ate at 8:15 this morning and has drunk twice since.</q> On day one the system can report what happened, but not whether it's normal, so that's all it says.</li>
+              <li><b>Borrowed reference, clearly labelled.</b> "Dogs Like Her" gives ranges for her breed, size and climate: <q>Denver's dry air pushes that up; the cold pushes it down.</q> The badges are outlined because these numbers belong to her breed, not to her yet.</li>
+              <li><b>The assistant leads.</b> While the screen has little to say, Ask EverWiz steps forward with three questions a new owner is likely to have. It fills the gap with something useful instead of a loading state.</li>
+              <li><b>A portrait that isn't finished.</b> Bella's photo starts as a coarse halftone, a quiet signal that the system is only beginning to see her.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Day 6 -->
+        <div class="state">
+          <div class="phone"><img src="assets/case-studies/hoomanely-web/day-6.webp" width="393" height="1226" alt="Day 6 home screen for Bella" loading="lazy" /></div>
+          <div>
+            <p class="day">DAY 6 · MID-FORMATION</p>
+            <h3>Speaking only where a pattern has actually repeated</h3>
+            <span class="speaks">Speaks about: her, where it's earned</span>
+            <ol class="notes">
+              <li><b>The first real observation.</b> <q>That's five mornings running within twenty minutes of the same time.</q> Mornings are the only thing that has repeated, so mornings are the only thing it talks about.</li>
+              <li><b>Honest about what it doesn't know.</b> <q>Her mornings are settling first. Water and rest still move around too much to call.</q> Saying "not yet" plainly reads as a product working correctly, not a broken one.</li>
+              <li><b>A record, not a countdown.</b> Each dot is a meal she ate, filled if she finished it. The row has no target and no end, so it can't be read as "12 of 30".</li>
+              <li><b>Her own lines appear.</b> Small traces of her meals, water and rest sit next to the reference ranges, so she starts to show up against her breed.</li>
+              <li><b>The assistant steps back.</b> Down to two questions, and they're about <em>her</em> now: <q>Why do mealtimes settle first?</q></li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Day 30 -->
+        <div class="state">
+          <div class="phone"><img src="assets/case-studies/hoomanely-web/day-30.webp" width="393" height="1410" alt="Day 30 home screen for Bella" loading="lazy" /></div>
+          <div>
+            <p class="day">DAY 30 · BASELINE FORMED</p>
+            <h3>Comparing her to herself, calmly</h3>
+            <span class="speaks">Speaks about: her, against her own range</span>
+            <ol class="notes">
+              <li><b>Noticing without alarming.</b> <q>She ate once today. That's two fewer than her usual three, and the first time this month.</q> It's specific because the system now knows her "usual".</li>
+              <li><b>Context instead of a diagnosis.</b> <q>One day outside her usual isn't a pattern.</q> The product never claims to diagnose. It gives the owner a calm frame for what they're seeing.</li>
+              <li><b>The missing meal is drawn, not hidden.</b> On the timeline, the skipped meal appears as a dashed outline in the slot she usually eats, so you see the absence at a glance.</li>
+              <li><b>Her normal, in plain words.</b> <q>She eats between 6:50 and 7:30 most mornings… She rests longest between one and four, and that has held through the cold.</q></li>
+              <li><b>Judgement handed to the right person.</b> The assistant now asks <q>When is a change worth a vet visit?</q>, pointing to the vet instead of pretending to be one.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Side by side ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 05 — ONE SYSTEM, EVOLVING</p>
+          <h2>How each element <em>changes</em></h2>
+          <p>Every part of the screen follows the same permission, so the three days read as one system growing up rather than three separate designs.</p>
+        </div>
+        <div class="compare-scroll">
+          <table class="compare">
+            <thead><tr><th>ELEMENT</th><th>DAY 1</th><th>DAY 6</th><th>DAY 30</th></tr></thead>
+            <tbody>
+              <tr><th>Headline sentence</th><td>What happened today</td><td>The one thing that has repeated</td><td>Today compared with her usual</td></tr>
+              <tr><th>Reference ranges</th><td>Her breed and climate</td><td>Her early traces alongside them</td><td>Her own range</td></tr>
+              <tr><th>Badges</th><td>Outlined: borrowed numbers</td><td>Filling as numbers become hers</td><td>Filled: her numbers</td></tr>
+              <tr><th>Portrait</th><td>Coarse halftone</td><td>Sharper</td><td>Resolved, but can coarsen again with seasons or age</td></tr>
+              <tr><th>Meals record</th><td>Not yet</td><td>A dot per meal, no target</td><td>Her last thirty meals</td></tr>
+              <tr><th>Ask EverWiz</th><td>Leads, with three general questions</td><td>Two questions about her</td><td>Two questions, including when to see a vet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Direction killed ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 06 — THE DIRECTION I KILLED</p>
+          <h2>The ladder: <em>a progress bar in disguise</em></h2>
+          <p>
+            My first idea showed the baseline as a ladder that gained a rung for every meal, drink and rest,
+            so the record visibly stacked up over the month.
+          </p>
+          <p>
+            I dropped it for two reasons. It handed the owner a pile of readings and left the interpreting to them,
+            which is exactly the work the product exists to do. And a stack that only ever grows is
+            <strong>a progress bar with the numbers taken off</strong>, the very pattern the brief ruled out.
+          </p>
+        </div>
+        <div class="stage single" style="margin-top: 28px;">
+          <figure><img src="assets/case-studies/hoomanely-web/direction-killed.webp" width="724" height="636" alt="Hand-drawn sketches of the ladder system direction" loading="lazy" /><figcaption>EARLY SKETCHES · LADDER SYSTEM</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Learnings ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 07 — WHAT I TOOK AWAY</p>
+          <h2>Restraint is a <em>design decision</em></h2>
+        </div>
+        <div class="learn">
+          <div><p class="n">01</p><h4>Design a rule, not screens</h4><p>One governing rule made the three states consistent and easy to defend: every element answers to the same question.</p></div>
+          <div><p class="n">02</p><h4>Copy is the interface</h4><p>With no bars or rings allowed, the sentences carried the progress. Precise, calm wording did the work that visuals usually do.</p></div>
+          <div><p class="n">03</p><h4>"Not yet" builds trust</h4><p>Saying plainly what the system doesn't know yet made what it does say more believable.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="cs-end dark">
+    <p class="label">// THANKS FOR READING</p>
+    <h2>Want to talk about <em>this</em> project?</h2>
+    <div class="cta-row">
+      <button class="btn btn-primary light copy-email" data-email="arshdeep24kaur@gmail.com">Email me <span aria-hidden="true">⧉</span></button>
+      <a class="btn light-outline" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn light-outline" href="index.html#projects">See other work →</a>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Copy email to clipboard (same behaviour as the home page)
+    const toast = document.querySelector('.toast');
+    document.querySelectorAll('.copy-email').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const email = btn.dataset.email;
+        try {
+          await navigator.clipboard.writeText(email);
+          toast.textContent = `Email copied — ${email}`;
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        } catch {
+          window.location.href = `mailto:${email}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<title>Paisa Prototype</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a phone on the left, a designer-notes rail on the right. On narrow screens they stack. */
+:root{
+  --page:#E4E8E2; --app:#F4F6F1; --surface:#FFFFFF; --sunk:#EBEFE8;
+  --ink:#14201C; --ink-2:#4A5852; --ink-3:#7E8A84; --line:#DCE2DA;
+  --teal:#0E6B5C; --teal-soft:#D9ECE5; --teal-ink:#FFFFFF;
+  --mari:#D98A12; --mari-soft:#FBEBCF; --mari-ink:#5A3700;
+  --good:#2B8A55; --warn:#B87A0E; --bad:#C24E37;
+  --mute-1:#9FB8AF; --mute-2:#B9CBC4; --mute-3:#CFDBD6;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --page:#0B100E; --app:#111816; --surface:#19221F; --sunk:#141C19;
+  --ink:#E8EFEB; --ink-2:#A7B5AF; --ink-3:#73817B; --line:#28332F;
+  --teal:#4FC2A8; --teal-soft:#16382F; --teal-ink:#06201A;
+  --mari:#F0AE3E; --mari-soft:#3A2B10; --mari-ink:#FBE3B6;
+  --good:#5BC48A; --warn:#E3A945; --bad:#E8775F;
+  --mute-1:#3E5850; --mute-2:#34493F; --mute-3:#2B3C36; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --page:#0B100E; --app:#111816; --surface:#19221F; --sunk:#141C19;
+  --ink:#E8EFEB; --ink-2:#A7B5AF; --ink-3:#73817B; --line:#28332F;
+  --teal:#4FC2A8; --teal-soft:#16382F; --teal-ink:#06201A;
+  --mari:#F0AE3E; --mari-soft:#3A2B10; --mari-ink:#FBE3B6;
+  --good:#5BC48A; --warn:#E3A945; --bad:#E8775F;
+  --mute-1:#3E5850; --mute-2:#34493F; --mute-3:#2B3C36; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--page);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.stage{display:flex;gap:40px;justify-content:center;align-items:flex-start;padding-block:28px;max-width:1120px;margin:0 auto}
+.device{flex:0 0 auto;width:390px;height:812px;border-radius:46px;padding:10px;background:#0D1311;box-shadow:0 30px 60px -30px rgba(10,30,25,.45)}
+.screen{position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:var(--app);display:flex;flex-direction:column}
+.status{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:14px 26px 6px;font-family:var(--mono);font-size:12px;color:var(--ink-2)}
+.view{flex:1 1 auto;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}
+
+/* Notes rail */
+.notes{flex:1 1 360px;max-width:420px;min-width:0;padding-top:8px}
+.notes .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.notes h1{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.05;letter-spacing:-.02em;margin:6px 0 4px;text-wrap:balance}
+.notes .sub{color:var(--ink-2);margin:0 0 20px}
+.notes h2{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 8px;text-wrap:balance}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:7px;color:var(--ink-2)}
+.notes li b{color:var(--ink);font-weight:600}
+.notes section{padding:18px 0;border-top:1px solid var(--line)}
+.jump,.states{display:flex;flex-wrap:wrap;gap:8px}
+.jump button,.states button{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:13px}
+.jump button[aria-pressed="true"],.states button[aria-pressed="true"]{background:var(--ink);color:var(--app);border-color:var(--ink)}
+
+@media (max-width:860px){
+  .stage{flex-direction:column;align-items:center;gap:24px;padding-block:16px}
+  .notes{max-width:390px;width:100%;flex:0 0 auto}
+}
+@media (max-width:430px){
+  .device{width:100%;height:760px;border-radius:30px;padding:6px}
+  .screen{border-radius:25px}
+}
+
+/* ---------- App components ---------- */
+.pad{padding:8px 18px 24px}
+.h-greet{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:-.02em;line-height:1.1;margin:4px 0 2px}
+.sync{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--good);display:inline-block}
+.dot.bad{background:var(--bad)}
+.card{background:var(--surface);border-radius:var(--r);padding:16px;margin-top:12px;position:relative}
+.card h3{margin:0;font-size:13px;font-weight:600;color:var(--ink-2);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ask{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--teal);padding:4px 8px;border-radius:999px;background:var(--teal-soft)}
+.ask svg{width:12px;height:12px}
+.big{font-family:var(--display);font-weight:700;font-size:34px;letter-spacing:-.02em;line-height:1}
+.mid{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:-.01em}
+.muted{color:var(--ink-3)} .ink2{color:var(--ink-2)}
+.small{font-size:12px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.02em}
+.row{display:flex;align-items:center;gap:12px}
+.between{justify-content:space-between}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600}
+.pill.warn{background:var(--mari-soft);color:var(--mari-ink)}
+.pill.good{background:var(--teal-soft);color:var(--teal)}
+.pill.bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.banner{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;font-size:12.5px;margin-top:12px}
+.banner.bad{background:color-mix(in srgb,var(--bad) 13%,var(--surface));color:var(--ink)}
+.banner.info{background:var(--mari-soft);color:var(--mari-ink)}
+.banner button{font-weight:600;text-decoration:underline;margin-left:auto;white-space:nowrap}
+
+.weather{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;background:linear-gradient(135deg,var(--teal-soft),var(--surface) 70%)}
+.weather .w-title{font-family:var(--display);font-weight:700;font-size:21px;line-height:1.1}
+
+.safe{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center}
+.flow-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:12px 0 10px;gap:2px}
+.flow-bar span{display:block;height:100%}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:12px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+.insight{background:var(--ink);color:var(--app)}
+.insight .mono{color:color-mix(in srgb,var(--app) 60%,transparent)}
+.insight p{margin:6px 0 12px;font-size:15px;line-height:1.4}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px}
+.btn.primary{background:var(--teal);color:var(--teal-ink)}
+.btn.ghost{border:1px solid var(--line)}
+.insight .btn.ghost{border-color:color-mix(in srgb,var(--app) 30%,transparent)}
+.btn.light{background:var(--app);color:var(--ink)}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+.bill{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.bill:first-of-type{border-top:0}
+.date-chip{font-family:var(--mono);font-size:10px;text-align:center;line-height:1.1;padding:5px 0;border-radius:10px;background:var(--sunk)}
+.date-chip b{display:block;font-size:15px;font-family:var(--display)}
+.progress{height:8px;border-radius:99px;background:var(--sunk);overflow:hidden;margin:10px 0 6px}
+.progress span{display:block;height:100%;background:var(--teal);border-radius:99px}
+
+/* Tab bar */
+.tabbar{flex:0 0 auto;display:grid;grid-template-columns:repeat(3,1fr);padding:8px 10px 22px;background:var(--surface);border-top:1px solid var(--line)}
+.tabbar button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--ink-3);padding:6px 0}
+.tabbar button svg{width:22px;height:22px}
+.tabbar button[aria-current="true"]{color:var(--ink)}
+.tabbar .ai-tab span.orb{width:40px;height:40px;margin-top:-20px;border-radius:50%;display:grid;place-items:center;background:var(--teal);color:var(--teal-ink);box-shadow:0 6px 16px -6px var(--teal)}
+
+/* Onboarding */
+.onb{display:flex;flex-direction:column;min-height:100%;padding:14px 22px 26px}
+.onb .step{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.08em}
+.onb h2{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.05;letter-spacing:-.02em;margin:14px 0 8px;text-wrap:balance}
+.onb p.lede{color:var(--ink-2);margin:0 0 20px;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:500;font-size:14px;text-align:left}
+.chip[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft);color:var(--ink)}
+.spacer{flex:1}
+.consent{background:var(--surface);border-radius:var(--r);padding:16px;display:grid;gap:12px;margin-bottom:16px}
+.consent .row svg{flex:0 0 22px;color:var(--teal)}
+.fetch-list{display:grid;gap:14px;margin:8px 0 22px}
+.fetch-list .row{font-size:14px}
+.tick{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:0 0 22px;background:var(--sunk);color:var(--ink-3)}
+.tick.done{background:var(--teal);color:var(--teal-ink)}
+.tick.run{border:2px solid var(--teal);border-right-color:transparent;background:none;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.teaser{background:var(--surface);border-radius:14px;padding:12px 14px;font-size:13px;color:var(--ink-2);opacity:0;transform:translateY(6px);transition:all .4s}
+.teaser.show{opacity:1;transform:none}
+.reveal{background:var(--ink);color:var(--app);border-radius:22px;padding:20px;margin-bottom:14px}
+.reveal .big{color:var(--mari)}
+
+/* Chat */
+.chat-head{flex:0 0 auto;padding:4px 18px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.chat-head .t{font-family:var(--display);font-weight:700;font-size:20px}
+.tones{display:flex;background:var(--sunk);border-radius:999px;padding:3px}
+.tones button{padding:5px 9px;border-radius:999px;font-size:11.5px;font-weight:600;color:var(--ink-3)}
+.tones button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chat-wrap{display:flex;flex-direction:column;height:100%}
+.msgs{flex:1 1 auto;overflow-y:auto;padding:14px 16px 8px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
+.msgs::-webkit-scrollbar{display:none}
+.u{align-self:flex-end;max-width:80%;background:var(--teal);color:var(--teal-ink);padding:9px 13px;border-radius:18px 18px 4px 18px;font-weight:500}
+.u .ctx{display:block;font-family:var(--mono);font-size:10px;opacity:.75;margin-bottom:2px}
+.u .via{font-family:var(--mono);font-size:10px;opacity:.75;display:flex;gap:4px;align-items:center;margin-bottom:2px}
+.a{align-self:stretch;display:grid;gap:10px}
+.a .txt{font-size:15px;line-height:1.45}
+.a .viz{background:var(--surface);border-radius:var(--r);padding:12px}
+.src{display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.follow{display:flex;flex-wrap:wrap;gap:6px}
+.follow button{padding:7px 12px;border-radius:999px;border:1.5px solid var(--teal);color:var(--teal);font-weight:600;font-size:13px}
+.spoken{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink-2);background:var(--sunk);border-radius:12px;padding:7px 10px}
+.spoken svg{flex:0 0 16px;color:var(--teal)}
+.guard{font-size:12px;background:var(--mari-soft);color:var(--mari-ink);border-radius:12px;padding:8px 10px}
+.typing{display:flex;gap:4px;padding:6px 2px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--ink-3);animation:bob 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bob{50%{transform:translateY(-4px);opacity:.5}}
+.composer{flex:0 0 auto;display:flex;gap:8px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);background:var(--app)}
+.composer input{flex:1;min-width:0;padding:11px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--sunk);color:var(--ink)}
+.icon-btn.mic{background:var(--teal);color:var(--teal-ink)}
+.icon-btn svg{width:20px;height:20px}
+.intro{display:grid;gap:12px;padding-top:6px}
+.intro .mid{line-height:1.2}
+.start{display:grid;gap:8px}
+.start button{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:14px;background:var(--surface);font-weight:500;text-align:left}
+.start button small{color:var(--ink-3);font-family:var(--mono);font-size:10px}
+.listen{position:absolute;inset:auto 0 0 0;background:var(--surface);border-radius:26px 26px 0 0;padding:22px 20px 34px;box-shadow:0 -10px 30px -10px rgba(0,0,0,.2);display:grid;gap:14px;justify-items:center;text-align:center;z-index:5}
+.wave{display:flex;gap:4px;align-items:center;height:40px}
+.wave i{width:5px;border-radius:3px;background:var(--teal);animation:wv .9s ease-in-out infinite}
+@keyframes wv{0%,100%{height:8px}50%{height:36px}}
+.listen .heard{font-size:17px;font-weight:500;min-height:24px}
+
+/* Viz pieces */
+svg text{font-family:var(--body)}
+.slider{width:100%;accent-color:var(--teal)}
+.sub-row{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-top:1px solid var(--line);align-items:center}
+.sub-row:first-child{border-top:0}
+.sub-row .flag{grid-column:1/-1;font-size:12px;color:var(--mari-ink);background:var(--mari-soft);padding:4px 8px;border-radius:8px;justify-self:start}
+.drill-list{display:grid;gap:8px}
+.drill-list .bar{height:10px;border-radius:5px;background:var(--mari)}
+.link{color:var(--teal);font-weight:600;font-size:12.5px}
+.tip{font-size:12.5px;margin-top:8px;color:var(--ink-2);min-height:18px}
+.timeline{display:grid;grid-template-columns:auto 1fr auto;gap:10px 12px;align-items:center}
+.timeline .k{width:12px;height:12px;border-radius:50%;background:var(--ink-3)}
+
+/* Goals tab */
+.mem{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:12px 0;border-top:1px solid var(--line)}
+.mem:first-child{border-top:0}
+.mem .tag{font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.mem .x{color:var(--ink-3);font-size:12px;font-weight:600}
+.mem.new{animation:flash 1.6s}
+@keyframes flash{0%{background:var(--mari-soft)}100%{background:transparent}}
+.ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.ladder div{padding:8px;border-radius:10px;background:var(--sunk);font-size:11px;line-height:1.3}
+.ladder div.on{background:var(--teal-soft);color:var(--ink)}
+.ladder b{display:block;font-family:var(--mono);font-size:10px;color:var(--teal)}
+.toast{position:absolute;left:16px;right:16px;bottom:92px;background:var(--ink);color:var(--app);padding:11px 14px;border-radius:14px;font-size:13px;z-index:6}
+
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="stage">
+  <div class="device"><div class="screen" id="screen">
+    <div class="status"><span>21:48</span><span>Thu 22 Oct</span><span>5G ▮▮▮</span></div>
+    <div class="view" id="view"></div>
+    <nav class="tabbar" id="tabbar" hidden aria-label="Main">
+      <button data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+      <button data-tab="ask" class="ai-tab"><span class="orb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9z"/></svg></span>Ask Paisa</button>
+      <button data-tab="goals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>Goals</button>
+    </nav>
+  </div></div>
+
+  <aside class="notes" aria-label="Designer notes">
+    <div class="eyebrow">Product design assignment · prototype</div>
+    <h1>Paisa, a money advisor that does the noticing</h1>
+    <p class="sub">Persona: Riya, 26, product analyst in Bengaluru. ₹85,000 salary on the 1st. Saving for a Goa trip on 15 Dec. All figures are sample data.</p>
+    <section>
+      <div class="eyebrow" style="margin-bottom:8px">Jump to</div>
+      <div class="jump" id="jump">
+        <button data-go="onb1">Onboarding</button>
+        <button data-go="home">Home</button>
+        <button data-go="ask">Ask Paisa</button>
+        <button data-go="hero">Hero story</button>
+        <button data-go="goals">Goals & memory</button>
+      </div>
+    </section>
+    <section id="notes-body"></section>
+    <section>
+      <div class="eyebrow" style="margin-bottom:8px">Edge states (toggle, then look at Home)</div>
+      <div class="states" id="states">
+        <button data-edge="sync">Sync failed</button>
+        <button data-edge="salary">Salary not detected</button>
+        <button data-edge="uncat">Unsorted transactions</button>
+        <button data-edge="sample">Sample-data mode</button>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<script>
+// ---------- Data (sample persona, all numbers reconcile) ----------
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const D = {
+  salary:85000, bills:31500, goalSave:12000, flex:41500, flexSpent:33800, daysLeft:10, safeToday:770, spentToday:310,
+  cats:[
+    {k:'food', n:'Food delivery', v:9800, hot:true, m:[['Swiggy',5600],['Zomato',4200]]},
+    {k:'shop', n:'Shopping', v:7200, m:[['Myntra',3400],['Amazon',2900],['Nykaa',900]]},
+    {k:'cabs', n:'Cabs & travel', v:5100, m:[['Uber',3300],['Rapido',1100],['Namma Metro',700]]},
+    {k:'groc', n:'Groceries', v:4300, m:[['Blinkit',2600],['BigBasket',1700]]},
+    {k:'out',  n:'Going out', v:3400, m:[['Toit',1900],['PVR',1500]]},
+    {k:'oth',  n:'Everything else', v:4000, m:[['Pharmacy',1300],['Gifts',1600],['Misc UPI',1100]]},
+  ],
+  foodMonths:[['May',6400],['Jun',7100],['Jul',6800],['Aug',7300],['Sep',6900],['Oct',9800]],
+  // orders per weekday × slot (Breakfast, Lunch, Evening, After 10pm); sums to 26
+  heat:{Mon:[0,1,1,3],Tue:[0,0,1,3],Wed:[0,1,0,2],Thu:[0,0,1,3],Fri:[0,1,2,1],Sat:[1,1,2,0],Sun:[1,0,1,0]},
+  subs:[['Netflix',649,''],['Spotify',119,''],['Cult.fit',1499,'No check-ins for 7 weeks'],['Disney+ Hotstar',299,'Already included in your Airtel plan'],['iCloud+',75,'']],
+  waterfall:[['Sep',28900,'total'],['Food delivery',2900],['Shopping',2100],['Cabs',1100],['Going out',-1200],['Oct',33800,'total']],
+};
+
+// ---------- State ----------
+const S = {
+  screen:'onb1', tab:'home', intents:new Set(['Save for a trip']), banks:new Set(['HDFC Bank','ICICI Bank']),
+  edge:{sync:false,salary:false,uncat:false,sample:false}, tone:'neutral', chat:[], busy:false,
+  insightDismissed:false, salaryConfirmed:true,
+  memory:[
+    {t:'Salary of ₹85,000 lands on the 1st', s:'From your transactions · you confirmed'},
+    {t:'Rent ₹22,000 and SIP ₹5,000 are fixed every month', s:'From your transactions'},
+    {t:'Saving ₹45,000 for Goa by 15 Dec', s:'You told me during setup'},
+    {t:'"PAYU*BLINKIT" is Groceries, not Shopping', s:'You corrected this · 14 Oct'},
+  ],
+};
+
+// ---------- Icons ----------
+const I = {
+  spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8z"/></svg>',
+  mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+  speak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>',
+  check:'<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+  eye:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+  undo:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>',
+  weather:`<svg viewBox="0 0 64 64" width="64" height="64"><circle cx="24" cy="24" r="12" fill="var(--mari)"/><g stroke="var(--mari)" stroke-width="3" stroke-linecap="round"><path d="M24 4v5M24 39v4M4 24h5M8 10l3.5 3.5M38 10l-3.5 3.5M8 38l3.5-3.5"/></g><path d="M22 52h28a10 10 0 0 0 0-20 13 13 0 0 0-25 4 8 8 0 0 0-3 16z" fill="var(--surface)" stroke="var(--ink-3)" stroke-width="2"/></svg>`,
+};
+const askBtn = (q, from) => `<button class="ask" data-ask="${q}" data-from="${from}">${I.spark}Ask</button>`;
+
+// ---------- Small charts ----------
+function ring(frac, size=96){
+  const r=40, c=2*Math.PI*r, f=Math.max(0,Math.min(1,frac));
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" role="img" aria-label="${Math.round(f*100)}% of today's allowance left">
+    <circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--sunk)" stroke-width="11"/>
+    <circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--teal)" stroke-width="11" stroke-linecap="round"
+      stroke-dasharray="${c*f} ${c}" transform="rotate(-90 50 50)"/>
+    <text x="50" y="47" text-anchor="middle" font-size="11" fill="var(--ink-3)">left</text>
+    <text x="50" y="63" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">${Math.round(f*100)}%</text></svg>`;
+}
+function pulseChart(){
+  const W=320,H=150,L=8,R=8,T=14,B=22, days=31, maxY=46000;
+  const x=d=>L+(d-1)/(days-1)*(W-L-R), y=v=>T+(1-v/maxY)*(H-T-B);
+  const per=D.flex/31; let up=[],lo=[],act=[], firstAbove=null;
+  for(let d=1;d<=31;d++){ up.push([x(d),y(d*per*1.1)]); lo.push([x(d),y(d*per*0.85)]); }
+  for(let d=1;d<=22;d++){ const f=d<=10?0.95:0.95+(d-10)/12*0.197; const v=d*per*f; act.push([x(d),y(v)]); if(firstAbove===null && f>1.1) firstAbove=d; }
+  const band='M'+up.map(p=>p.join(',')).join('L')+'L'+lo.reverse().map(p=>p.join(',')).join('L')+'Z';
+  const line='M'+act.map(p=>p.join(',')).join('L'); const end=act[act.length-1];
+  const ax=x(firstAbove);
+  return {fa:firstAbove, svg:`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Cumulative spend this month compared with your normal range">
+    <path d="${band}" fill="var(--teal-soft)"/>
+    <line x1="${ax}" x2="${ax}" y1="${T}" y2="${H-B}" stroke="var(--mari)" stroke-dasharray="3 3"/>
+    <path d="${line}" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linejoin="round"/>
+    <circle cx="${end[0]}" cy="${end[1]}" r="4.5" fill="var(--mari)" stroke="var(--surface)" stroke-width="2"/>
+    <text x="${x(26)}" y="${y(31*per*0.97)}" font-size="10" fill="var(--teal)" text-anchor="middle">your normal</text>
+    <text x="${end[0]-6}" y="${end[1]-9}" font-size="11" font-weight="600" fill="var(--ink)" text-anchor="end">${inr(D.flexSpent)}</text>
+    ${[1,8,15,22,31].map(d=>`<text x="${x(d)}" y="${H-6}" font-size="10" fill="var(--ink-3)" text-anchor="middle">${d} Oct</text>`).join('')}
+  </svg>`};
+}
+
+// ---------- AI scenarios ----------
+const T = (n,h,r,m)=>({neutral:n,hype:h,roast:r,meme:m});
+function treemapLayout(items,x,y,w,h){
+  if(items.length===1) return [{...items[0],x,y,w,h}];
+  const tot=items.reduce((s,i)=>s+i.v,0); let acc=0,k=0;
+  for(;k<items.length-1;k++){ if(acc+items[k].v>tot/2 && k>0) break; acc+=items[k].v; }
+  const a=items.slice(0,k), b=items.slice(k), ra=a.reduce((s,i)=>s+i.v,0)/tot;
+  return w>=h ? [...treemapLayout(a,x,y,w*ra,h),...treemapLayout(b,x+w*ra,y,w*(1-ra),h)]
+              : [...treemapLayout(a,x,y,w,h*ra),...treemapLayout(b,x,y+h*ra,w,h*(1-ra))];
+}
+function vizTreemap(msg){
+  if(msg.drill){
+    const c=D.cats.find(c=>c.k===msg.drill), max=Math.max(...c.m.map(m=>m[1]));
+    return `<div class="row between" style="margin-bottom:10px"><b>${c.n} · ${inr(c.v)}</b><button class="link" data-drill="" data-mid="${msg.id}">← All categories</button></div>
+      <div class="drill-list">${c.m.map(([n,v])=>`<div><div class="row between small"><span>${n}</span><span class="num">${inr(v)}</span></div>
+      <div class="bar" style="width:${v/max*100}%;${c.hot?'':'background:var(--mute-1)'}"></div></div>`).join('')}</div>
+      ${c.hot?'<div class="tip">26 orders this month. Your usual is 18.</div>':''}`;
+  }
+  const W=320,H=210, tiles=treemapLayout([...D.cats].sort((a,b)=>b.v-a.v),0,0,W,H);
+  const mutes=['var(--mute-1)','var(--mute-2)','var(--mute-3)'];
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Where your ₹33,800 went this month. Tap a block to see merchants.">
+    ${tiles.map((t,i)=>{ const fill=t.hot?'var(--mari)':mutes[i%3]; const tc=t.hot?'var(--mari-ink)':'var(--ink)';
+      return `<g data-drill="${t.k}" data-mid="${msg.id}" style="cursor:pointer"><rect x="${t.x+1.5}" y="${t.y+1.5}" width="${t.w-3}" height="${t.h-3}" rx="8" fill="${fill}"/>
+      ${t.w>70&&t.h>34?`<text x="${t.x+10}" y="${t.y+21}" font-size="12" font-weight="600" fill="${tc}">${t.n}</text>
+      <text x="${t.x+10}" y="${t.y+37}" font-size="11" fill="${tc}" opacity=".8">${inr(t.v)}${t.hot?' · up 42%':''}</text>`:''}</g>`}).join('')}
+  </svg><div class="tip">Tap any block to see merchants.</div>`;
+}
+function vizFoodBars(){
+  const W=320,H=170,L=8,B=24,T=18, max=11000, bw=34, gap=(W-L*2-bw*6)/5, y=v=>T+(1-v/max)*(H-T-B), avg=6900;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Food delivery spend by month, May to October">
+    ${D.foodMonths.map(([m,v],i)=>{const x=L+i*(bw+gap), hot=m==='Oct';
+      return `<rect x="${x}" y="${y(v)}" width="${bw}" height="${H-B-y(v)}" rx="6" fill="${hot?'var(--mari)':'var(--mute-2)'}"/>
+      <text x="${x+bw/2}" y="${H-8}" font-size="10.5" text-anchor="middle" fill="var(--ink-3)">${m}</text>
+      ${hot?`<text x="${x+bw/2}" y="${y(v)-6}" font-size="11" font-weight="600" text-anchor="middle" fill="var(--ink)">${inr(v)}</text>`:''}`}).join('')}
+    <line x1="${L}" x2="${W-L}" y1="${y(avg)}" y2="${y(avg)}" stroke="var(--teal)" stroke-dasharray="4 3" stroke-width="1.5"/>
+    <text x="${L+2}" y="${y(avg)-5}" font-size="10" fill="var(--teal)">your normal ${inr(avg)}</text>
+  </svg>
+  <div class="row small" style="gap:18px;margin-top:4px"><span><b class="num">26</b> <span class="muted">orders (usual 18)</span></span><span><b class="num">₹377</b> <span class="muted">per order (usual ₹383)</span></span></div>`;
+}
+function vizHeat(msg){
+  const slots=['Breakfast','Lunch','Evening','After 10pm'], days=Object.keys(D.heat), cw=56, ch=24, L=40, T=22;
+  const W=L+cw*4, H=T+ch*7+4;
+  const sel=msg.sel;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Food orders by day and time. Late weeknights are the hot spot.">
+    ${slots.map((s,j)=>`<text x="${L+j*cw+cw/2}" y="14" font-size="10" text-anchor="middle" fill="${j===3?'var(--ink)':'var(--ink-3)'}" font-weight="${j===3?600:400}">${s}</text>`).join('')}
+    ${days.map((d,i)=>`<text x="0" y="${T+i*ch+16}" font-size="10.5" fill="var(--ink-3)">${d}</text>`+
+      D.heat[d].map((v,j)=>{const op=v===0?0:0.25+v/3*0.75, on=sel===d+j;
+        return `<g data-cell="${d}|${j}|${v}" data-mid="${msg.id}" style="cursor:pointer"><rect x="${L+j*cw+2}" y="${T+i*ch+2}" width="${cw-4}" height="${ch-4}" rx="5" fill="var(--sunk)"/>
+        <rect x="${L+j*cw+2}" y="${T+i*ch+2}" width="${cw-4}" height="${ch-4}" rx="5" fill="var(--mari)" fill-opacity="${op}" ${on?'stroke="var(--ink)" stroke-width="2"':''}/>
+        ${v?`<text x="${L+j*cw+cw/2}" y="${T+i*ch+16}" font-size="10.5" text-anchor="middle" fill="var(--ink)" font-weight="600">${v}</text>`:''}</g>`}).join('')).join('')}
+    <rect x="${L+3*cw}" y="${T}" width="${cw}" height="${ch*4}" rx="7" fill="none" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+  </svg><div class="tip">${msg.selText||'Tap a cell for detail. Dashed box: Monday to Thursday after 10pm.'}</div>`;
+}
+function goaDate(cut){ const pace=7700+4300*cut, days=19000/pace*30.4, d=new Date(2026,9,22); d.setDate(d.getDate()+Math.round(days)); return d; }
+const fmtD = d=>d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+function vizGoa(msg){
+  const cut=msg.cut||0, W=320,H=180,L=8,R=12,T=16,B=24;
+  const t0=new Date(2026,9,22), t1=new Date(2027,0,20), span=t1-t0;
+  const x=d=>L+(d-t0)/span*(W-L-R), y=v=>T+(1-(v-20000)/(48000-20000))*(H-T-B);
+  const hit=goaDate(cut), dl=new Date(2026,11,15), late=Math.round((hit-dl)/864e5);
+  const ok=late<=0;
+  const base=goaDate(0);
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Goa savings projection">
+    <line x1="${L}" x2="${W-R}" y1="${y(45000)}" y2="${y(45000)}" stroke="var(--ink-3)" stroke-dasharray="4 3"/>
+    <text x="${L}" y="${y(45000)-5}" font-size="10" fill="var(--ink-3)">Goal ₹45,000</text>
+    <line x1="${x(dl)}" x2="${x(dl)}" y1="${T}" y2="${H-B}" stroke="var(--teal)" stroke-width="1.5"/>
+    <text x="${x(dl)+4}" y="${H-B-4}" font-size="10" fill="var(--teal)">Trip 15 Dec</text>
+    ${cut>0?`<line x1="${x(t0)}" y1="${y(26000)}" x2="${x(base)}" y2="${y(45000)}" stroke="var(--mute-1)" stroke-width="2" stroke-dasharray="3 3"/>`:''}
+    <line x1="${x(t0)}" y1="${y(26000)}" x2="${x(hit)}" y2="${y(45000)}" stroke="${ok?'var(--good)':'var(--mari)'}" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="${x(t0)}" cy="${y(26000)}" r="4" fill="var(--ink)"/><text x="${x(t0)+6}" y="${y(26000)+14}" font-size="10" fill="var(--ink-2)">Today ₹26,000</text>
+    <circle cx="${x(hit)}" cy="${y(45000)}" r="5.5" fill="${ok?'var(--good)':'var(--mari)'}" stroke="var(--surface)" stroke-width="2"/>
+    <text x="${Math.min(x(hit),W-R-4)}" y="${y(45000)+18}" font-size="11" font-weight="600" text-anchor="end" fill="var(--ink)">${fmtD(hit)}</text>
+    ${['Nov','Dec','Jan'].map((m,i)=>`<text x="${x(new Date(2026,10+i,1))}" y="${H-7}" font-size="10" fill="var(--ink-3)" text-anchor="middle">1 ${m}</text>`).join('')}
+  </svg>
+  <label class="small ink2" for="cut-${msg.id}" style="display:block;margin-top:6px">Cut late-night orders by <b class="num">${Math.round(cut*100)}%</b> (saves ${inr(4300*cut)} a month)</label>
+  <input class="slider" id="cut-${msg.id}" type="range" min="0" max="100" step="10" value="${Math.round(cut*100)}" data-cut="${msg.id}">
+  <div class="row" style="margin-top:6px"><span class="pill ${ok?'good':'warn'}">${ok?'On time for your trip':late+' days late'}</span><span class="small muted">at ${inr(7700+4300*cut)}/month</span></div>`;
+}
+function vizWaterfall(){
+  const W=320,H=190,L=6,B=34,T=14, base=25000,max=35000, n=D.waterfall.length, bw=38, gap=(W-L*2-bw*n)/(n-1);
+  const y=v=>T+(1-(v-base)/(max-base))*(H-T-B); let run=0;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="What changed between September and October">
+    ${D.waterfall.map(([lab,v,kind],i)=>{ const x=L+i*(bw+gap); let y0,y1,fill;
+      if(kind==='total'){ run=v; y0=y(v); y1=y(base); fill='var(--ink-2)'; }
+      else { const a=run, b=run+v; run=b; y0=y(Math.max(a,b)); y1=y(Math.min(a,b)); fill=v>0?(lab==='Food delivery'?'var(--mari)':'var(--mute-1)'):'var(--good)'; }
+      const val=kind==='total'?inr(v).replace(',000','k').replace(',900','.9k').replace(',800','.8k'):(v>0?'+':'−')+inr(Math.abs(v));
+      return `<rect x="${x}" y="${y0}" width="${bw}" height="${Math.max(2,y1-y0)}" rx="4" fill="${fill}"/>
+        <text x="${x+bw/2}" y="${y0-4}" font-size="9.5" text-anchor="middle" fill="var(--ink)" font-weight="600">${val}</text>
+        <text x="${x+bw/2}" y="${H-B+14}" font-size="9" text-anchor="middle" fill="var(--ink-3)">${lab.split(' ')[0]}</text>
+        ${lab.split(' ')[1]?`<text x="${x+bw/2}" y="${H-B+25}" font-size="9" text-anchor="middle" fill="var(--ink-3)">${lab.split(' ')[1]}</text>`:''}`}).join('')}
+    <path d="M${L} ${H-B} l6 -4 l6 4 l6 -4" fill="none" stroke="var(--ink-3)"/>
+  </svg><div class="small muted">Axis starts at ₹25,000 so the changes are visible.</div>`;
+}
+function vizSubs(){
+  return D.subs.map(([n,v,f])=>`<div class="sub-row"><span>${n}</span><b class="num">${inr(v)}<span class="muted small">/mo</span></b>${f?`<span class="flag">${f}</span>`:''}</div>`).join('')+
+    `<div class="row between" style="padding-top:10px;border-top:1px solid var(--line)"><span class="ink2">Total</span><b class="num">₹2,641/mo · ₹31,692/yr</b></div>`;
+}
+function vizSafe(){
+  const rows=[['Salary this month',D.salary,''],['Fixed bills (rent, SIP, EMI)',-D.bills,''],['Goa saving',-D.goalSave,''],['Free to spend in October',D.flex,'b'],['Spent so far',-D.flexSpent,''],['Left for 10 days',7700,'b']];
+  return rows.map(([k,v,b])=>`<div class="row between" style="padding:6px 0;${b?'border-top:1px solid var(--line);font-weight:600':''}"><span class="${b?'':'ink2'}">${k}</span><span class="num">${v<0?'−':''}${inr(Math.abs(v))}</span></div>`).join('')+
+    `<div class="row between" style="padding:10px 12px;margin-top:6px;border-radius:12px;background:var(--teal-soft)"><b>Safe to spend today</b><b class="num">${inr(770)}</b></div>`;
+}
+function vizCard(){
+  return `<div class="timeline small">
+    <i class="k" style="background:var(--ink)"></i><span>Today · balance across HDFC and ICICI</span><b class="num">${inr(48200)}</b>
+    <i class="k" style="background:var(--good)"></i><span>1 Nov · salary lands</span><b class="num" style="color:var(--good)">+${inr(85000)}</b>
+    <i class="k" style="background:var(--mari)"></i><span>3 Nov · HDFC card due</span><b class="num">${inr(18400)}</b>
+  </div>`;
+}
+
+const SCN = {
+  where:{q:"Where's my money going?", src:'Based on 212 transactions from 1–22 Oct', viz:vizTreemap,
+    say:T("You've spent ₹33,800 on day-to-day things this month. Food delivery is the biggest slice, and it's the one that has changed.",
+      "₹33,800 tracked and sorted already. Your biggest slice is food delivery, so that's where we can win this month.",
+      "₹33,800 gone in 22 days. Swiggy and Zomato are practically your flatmates now.",
+      "Your wallet: crying. Food delivery: thriving. Tap the orange block, I dare you."),
+    next:[['foodWhy','Why is food up?'],['higher','Compare with September']]},
+  foodWhy:{q:'Why is food delivery up?', src:'26 Swiggy and Zomato orders · 6-month history', viz:vizFoodBars,
+    say:T("Food delivery is ₹9,800, 42% above your usual ₹6,900. Your orders aren't bigger, they still average about ₹380. You're ordering more often: 26 times instead of 18.",
+      "Here's the good news: you're not overspending per order, it's still about ₹380. You just ordered 26 times instead of 18. That's a very fixable habit.",
+      "Same ₹380 order, just 26 times instead of 18. That's less of a treat and more of a subscription.",
+      "Order size: unchanged. Order count: speedrun. 26 vs 18."),
+    next:[['when','When do I usually order?']]},
+  when:{q:'When do I usually order?', src:'Order timestamps from SMS and UPI', viz:vizHeat,
+    say:T("11 of your 26 orders were placed after 10pm, Monday to Thursday. They add up to ₹4,300, which is more than this month's whole increase.",
+      "Found it! 11 late weeknight orders, ₹4,300 in total. Change this one habit and you're back to normal.",
+      "11 orders after 10pm on work nights. That's ₹4,300 of 'I'll just get something small'.",
+      "10pm you: 'one paneer roll won't hurt.' 10pm you, eleven times: ₹4,300."),
+    next:[['goa','What does this do to my Goa trip?']]},
+  goa:{q:'What does this do to my Goa trip?', src:'Goal: ₹45,000 by 15 Dec · last 3 months of saving', viz:vizGoa,
+    say:T("At your current pace you'll have ₹45,000 around 5 Jan, about three weeks after the trip. Drag the slider to see what cutting late-night orders does.",
+      "You're already at ₹26,000, more than halfway! Drag the slider and watch the date move.",
+      "At this rate you'll reach Goa in January, just in time to miss it. Drag the slider.",
+      "Current plan: Goa in January, aka 'Goa but cold'. Drag to fix."),
+    next:[['nudge','Remind me at 10pm on weeknights'],['notnow','Not now']]},
+  nudge:{q:'Remind me at 10pm on weeknights', src:'Saved to what Paisa knows about you', viz:null,
+    say:T("Done. From Monday to Thursday at 10pm I'll send you your Goa progress. I've also noted that late-night orders are a habit you want to work on.",
+      "Locked in! Weeknights at 10pm I'll send your Goa progress. Future you on the beach says thanks.",
+      "Fine. At 10pm on weeknights I'll be the voice in your head. You're welcome.",
+      "Nudge set. At 10pm I'll show up like a Goa reel in your feed."),
+    next:[['memory','Show what you know about me']], effect:'nudge'},
+  notnow:{q:'Not now', src:'', viz:null, say:T("No problem. I'll bring this up again only if late-night orders keep rising next week.","Got it, no pressure. I'll check back only if things change.","Okay. I'll be watching. Quietly.","Ok, I'll go back to lurking."), next:[['where',"Where's my money going?"]]},
+  higher:{q:'Why is this month higher?', src:'Sep vs Oct, 1–22 of each month', viz:vizWaterfall,
+    say:T("This month is ₹4,900 above September. Food delivery explains ₹2,900 of that, shopping ₹2,100, and cabs ₹1,100. You actually spent ₹1,200 less on going out.",
+      "You're ₹4,900 above September, but going out is down ₹1,200, nice! Food delivery is the main thing to fix.",
+      "₹4,900 more than September. You went out less and still spent more. Impressive, honestly.",
+      "Sep: chill. Oct: food delivery said hold my chai. +₹4,900."),
+    next:[['foodWhy','Why is food up?'],['where',"Where's my money going?"]]},
+  subs:{q:'Any subscriptions I forgot?', src:'Recurring debits detected over 6 months', viz:vizSubs,
+    say:T("You pay ₹2,641 a month for 5 subscriptions. Two are worth a look: Cult.fit has had no check-ins for 7 weeks, and your Airtel plan already includes Hotstar.",
+      "Easy win: ₹1,798 a month could come back to you from just two subscriptions.",
+      "₹1,499 a month for a gym you've visited zero times in 7 weeks. Bold.",
+      "Cult.fit: 'are you still there?' You: 👻"),
+    next:[['remind','Remind me to cancel Cult.fit']]},
+  remind:{q:'Remind me to cancel Cult.fit', src:'', viz:null,
+    say:T("I'll remind you on 28 Oct, three days before it renews. Paisa can't cancel it for you; I'll link you to the right page.","Reminder set for 28 Oct, before it renews.","28 Oct. I'll remind you. Don't let me down.","Reminder set. Cult.fit's days are numbered."), next:[]},
+  habits:{q:'What are my habits?', src:'Patterns over 6 months', viz:()=>`<div class="drill-list small">
+      <div class="row between"><span>Late weeknight food orders</span><span class="pill warn">New this month</span></div>
+      <div class="row between"><span>40% of shopping in the first 5 days after payday</span><span class="pill warn">Every month</span></div>
+      <div class="row between"><span>Going out on weekends is steady at about ₹850</span><span class="pill good">Stable</span></div></div>`,
+    say:T("Three patterns stand out. One of them is new this month.","You've got a solid base. One new habit needs attention.","Three habits. One of them is a 10pm problem.","Your habits, ranked by how much they need an intervention:"),
+    next:[['when','When do I order food?']]},
+  safe:{q:'How is safe-to-spend worked out?', src:'Bills and salary detected from 6 months of history', viz:vizSafe,
+    say:T("It's what you can spend today and still cover your bills and your Goa saving. It changes every time your accounts sync.","It's your guilt-free number for today. Stay under it and the month takes care of itself.","It's the number you're about to ignore. Here's how it's worked out.","Today's spending limit, calculated:"),
+    next:[['higher','Why is this month higher?']]},
+  card:{q:'My card bill is ₹18,400 and I am worried', src:'HDFC card statement · balances synced 2h ago', viz:vizCard, forceNeutral:true,
+    say:T("Your salary lands on 1 Nov, two days before the bill is due on 3 Nov, so you can pay it in full. Paying in full avoids roughly ₹640 a month in interest. If you want, I'll remind you on 1 Nov to pay it from your bank app.",null,null,null),
+    next:[['cardRemind','Remind me on 1 Nov']]},
+  cardRemind:{q:'Remind me on 1 Nov', src:'', viz:null, forceNeutral:true, say:T("Done. On 1 Nov, after your salary arrives, I'll remind you to pay the full ₹18,400.",null,null,null), next:[]},
+};
+const START=[['where',"Where's my money going?",'Explore'],['higher','Why is this month higher?','Explain'],['goa','Can I afford Goa in Dec?','Plan'],['subs','Any subscriptions I forgot?','Find leaks'],['habits','What are my habits?','Patterns'],['card','My card bill is due','Help']];
+
+// ---------- Renderers ----------
+const view=document.getElementById('view'), tabbar=document.getElementById('tabbar'), screen=document.getElementById('screen');
+
+function render(){
+  const s=S.screen;
+  tabbar.hidden = s.startsWith('onb');
+  if(s==='onb1') view.innerHTML=onb1();
+  else if(s==='onb2') view.innerHTML=onb2();
+  else if(s==='onb3') { view.innerHTML=onb3(); runFetch(); }
+  else if(s==='onb4') view.innerHTML=onb4();
+  else if(S.tab==='home') view.innerHTML=home();
+  else if(S.tab==='ask') view.innerHTML=ask();
+  else view.innerHTML=goals();
+  tabbar.querySelectorAll('button').forEach(b=>b.setAttribute('aria-current', String(!s.startsWith('onb') && b.dataset.tab===S.tab)));
+  if(S.tab==='ask' && !s.startsWith('onb')){ const m=view.querySelector('.msgs'); if(m) m.scrollTop=m.scrollHeight; }
+  renderNotes();
+}
+
+function onb1(){
+  const opts=['Save for a trip','Stop overspending','Build an emergency fund','Clear my credit card','Just understand my money','Start investing'];
+  return `<div class="onb"><div class="step">STEP 1 OF 3</div>
+    <h2>What do you want your money to do?</h2><p class="lede">Pick any that fit. Paisa uses this to decide what to watch for you.</p>
+    <div class="chips">${opts.map(o=>`<button class="chip" data-intent="${o}" aria-pressed="${S.intents.has(o)}">${o}</button>`).join('')}</div>
+    ${S.intents.has('Save for a trip')?`<div class="consent" style="margin-top:18px"><div class="small ink2">Quick detail for your trip</div>
+      <div class="chips"><button class="chip" aria-pressed="true">Goa</button><button class="chip" aria-pressed="true">₹45,000</button><button class="chip" aria-pressed="true">by 15 Dec</button></div></div>`:''}
+    <div class="spacer"></div>
+    <button class="btn primary block" data-go="onb2" ${S.intents.size?'':'disabled'}>Continue</button></div>`;
+}
+function onb2(){
+  const banks=['HDFC Bank','ICICI Bank','SBI','Axis Bank','Kotak'];
+  return `<div class="onb"><div class="step">STEP 2 OF 3</div>
+    <h2>Connect your accounts</h2><p class="lede">Paisa reads 6 months of history through an RBI-regulated Account Aggregator. It never sees your passwords.</p>
+    <div class="consent">
+      <div class="row">${I.eye}<span><b>Read-only.</b> Paisa can't move money.</span></div>
+      <div class="row">${I.lock}<span><b>Consent for 12 months.</b> Refreshes up to 4 times a day.</span></div>
+      <div class="row">${I.undo}<span><b>Revoke any time</b> from Settings or your Account Aggregator app.</span></div>
+    </div>
+    <div class="small ink2" style="margin-bottom:8px">Your banks</div>
+    <div class="chips">${banks.map(b=>`<button class="chip" data-bank="${b}" aria-pressed="${S.banks.has(b)}">${b}</button>`).join('')}</div>
+    <div class="spacer" style="min-height:20px"></div>
+    <button class="btn primary block" data-go="onb3" ${S.banks.size?'':'disabled'}>Approve on Account Aggregator</button>
+    <button class="btn block" style="margin-top:8px;color:var(--ink-2)" data-act="sample">Not now, show me sample data</button></div>`;
+}
+function onb3(){
+  return `<div class="onb"><div class="step">STEP 3 OF 3</div>
+    <h2>Reading your last 6 months</h2><p class="lede">Usually under a minute. You can leave; we'll notify you when it's ready.</p>
+    <div class="fetch-list">
+      ${['Consent approved','Fetching from '+[...S.banks].join(' and '),'Sorting 1,240 transactions','Finding your salary and bills'].map((t,i)=>`<div class="row" data-fs="${i}"><span class="tick">${I.check}</span>${t}</div>`).join('')}
+    </div>
+    <div style="display:grid;gap:8px">
+      <div class="teaser" data-tz="0">Found a regular credit of ₹85,000 on the 1st. That looks like your salary.</div>
+      <div class="teaser" data-tz="1">Spotted 5 subscriptions. Two of them look unused.</div>
+    </div></div>`;
+}
+let fetchTimers=[];
+function runFetch(){
+  fetchTimers.forEach(clearTimeout); fetchTimers=[];
+  const steps=[...view.querySelectorAll('[data-fs]')];
+  steps.forEach((el,i)=>{
+    fetchTimers.push(setTimeout(()=>{ const t=el.querySelector('.tick'); t.className='tick run'; t.innerHTML=''; },i*900));
+    fetchTimers.push(setTimeout(()=>{ const t=el.querySelector('.tick'); t.className='tick done'; t.innerHTML=I.check; if(i===2) view.querySelector('[data-tz="0"]')?.classList.add('show'); if(i===3) view.querySelector('[data-tz="1"]')?.classList.add('show'); },i*900+800));
+  });
+  fetchTimers.push(setTimeout(()=>{ if(S.screen==='onb3'){ S.screen='onb4'; render(); } },steps.length*900+1400));
+}
+function onb4(){
+  return `<div class="onb"><div class="step">YOUR FIRST INSIGHT</div>
+    <h2>Here's what stood out</h2>
+    <div class="reveal"><div class="mono" style="opacity:.7">OCTOBER SO FAR</div>
+      <div class="big" style="margin:8px 0">₹9,800</div><div style="font-size:15px">on food delivery. That's 42% more than your usual month, and it's the main reason Goa is behind schedule.</div></div>
+    <div class="consent"><div><b>Is ₹85,000 on the 1st your salary?</b><div class="small muted">Everything Paisa calculates starts from this.</div></div>
+      <div class="chips"><button class="chip" data-salary="yes" aria-pressed="${S.salaryConfirmed}">Yes, that's my salary</button><button class="chip" data-salary="no" aria-pressed="${!S.salaryConfirmed}">No, I'll set it</button></div></div>
+    <div class="spacer"></div>
+    <button class="btn primary block" data-go="home">Go to my home</button></div>`;
+}
+
+function home(){
+  const e=S.edge, p=pulseChart();
+  const stamp=e.sync?`<span class="sync"><i class="dot bad"></i>ICICI didn't sync · showing data from 21 Oct, 9:10pm</span>`:`<span class="sync"><i class="dot"></i>Synced 2h ago · HDFC, ICICI</span>`;
+  const safeCard = e.salary
+    ? `<div class="card"><h3>Safe to spend today</h3><p style="margin:8px 0 12px">We couldn't find a regular salary yet. Tell us your monthly income to unlock your daily number.</p>
+       <div class="chips"><button class="chip">₹60–80k</button><button class="chip" aria-pressed="true">₹80k–1L</button><button class="chip">It varies</button></div></div>`
+    : `<div class="card"><h3>Safe to spend today ${askBtn('safe','Safe to spend')}</h3>
+       <div class="safe" style="margin-top:10px">${ring((D.safeToday-D.spentToday)/D.safeToday)}
+       <div><div class="big num">${inr(D.safeToday-D.spentToday)}</div><div class="small ink2" style="margin-top:4px">left of today's ${inr(D.safeToday)}</div>
+       <div class="mono muted" style="margin-top:8px">${inr(D.spentToday)} spent today · estimated from SMS</div></div></div></div>`;
+  const insight = e.uncat
+    ? `<div class="card"><h3>Help me sort 3 payments</h3><p style="margin:8px 0">₹1,240 to <b>"UPI-RAZPAY*8821"</b> on 19 Oct. What was it?</p>
+       <div class="chips"><button class="chip">Food delivery</button><button class="chip">Shopping</button><button class="chip">Bills</button><button class="chip">Skip</button></div>
+       <div class="mono muted" style="margin-top:8px">Each answer teaches Paisa your merchants.</div></div>`
+    : S.insightDismissed
+    ? `<div class="card"><p class="small ink2" style="margin:0">Got it. I'll show fewer insights like that one. Your next one arrives after the next sync.</p></div>`
+    : `<div class="card insight"><div class="mono">PAISA NOTICED · AFTER TONIGHT'S SYNC</div>
+       <p>Food delivery is up 42% this month, and most of it happened after 10pm on weeknights.</p>
+       <div class="row"><button class="btn light" data-ask="foodWhy" data-from="Insight card">Show me why</button><button class="btn ghost" data-act="dismiss">Not useful</button></div></div>`;
+  return `<div class="pad">
+    ${e.sample?`<div class="banner info" style="margin-top:0">You're exploring sample data.<button data-go="onb2">Connect bank</button></div>`:''}
+    <div class="h-greet">Evening, Riya</div>${stamp}
+    ${e.sync?`<div class="banner bad">ICICI Bank isn't responding. Your numbers may be up to a day old.<button data-act="retry">Retry</button></div>`:''}
+    <div class="card weather"><div>${I.weather}</div><div><div class="mono muted">MONEY WEATHER</div><div class="w-title">Partly cloudy</div>
+      <div class="small ink2">Bills and savings are covered. Day-to-day spending is running hot.</div></div>
+      <div style="grid-column:1/-1;display:flex;justify-content:flex-end">${askBtn('higher','Money weather')}</div></div>
+    ${safeCard}
+    ${insight}
+    <div class="card"><h3>Where October's ₹85,000 is going ${askBtn('where','Cash flow')}</h3>
+      <div class="flow-bar">
+        <span style="flex:${D.bills};background:var(--ink-2)"></span><span style="flex:${D.goalSave};background:var(--teal)"></span>
+        <span style="flex:${D.flexSpent};background:var(--mari)"></span><span style="flex:7700;background:var(--sunk)"></span></div>
+      <div class="legend num"><span><i style="background:var(--ink-2)"></i>Bills ${inr(D.bills)}</span><span><i style="background:var(--teal)"></i>Goa saving ${inr(D.goalSave)}</span>
+        <span><i style="background:var(--mari)"></i>Spent ${inr(D.flexSpent)}</span><span><i style="background:var(--sunk);outline:1px solid var(--line)"></i>Left ${inr(7700)}</span></div></div>
+    <div class="card"><h3>Spending pace ${askBtn('higher','Spending pace')}</h3>
+      <div class="row" style="margin:6px 0 4px"><span class="pill warn">Above your normal since ${p.fa} Oct</span></div>${p.svg}</div>
+    <div class="card"><h3>Habit to watch ${askBtn('when','Habit card')}</h3>
+      <div class="row" style="margin-top:8px;align-items:flex-start"><div><div class="mid">Late-night orders</div>
+      <div class="small ink2">11 weeknight orders after 10pm in October, compared with 3 in September.</div></div></div>
+      <div class="row" style="gap:5px;margin-top:10px">${['M','T','W','T','F','S','S'].map((d,i)=>`<div style="flex:1;text-align:center"><div style="height:${[3,3,2,3,1,0,0][i]*10+4}px;background:${i<4?'var(--mari)':'var(--mute-2)'};border-radius:4px;margin-bottom:4px"></div><span class="mono muted">${d}</span></div>`).join('')}</div></div>
+    <div class="card"><h3>Coming up ${askBtn('subs','Bills')}</h3>
+      <div style="margin-top:6px">
+      <div class="bill"><div class="date-chip"><b>25</b>OCT</div><div>Netflix<div class="small muted">Monthly</div></div><b class="num">${inr(649)}</b></div>
+      <div class="bill"><div class="date-chip"><b>27</b>OCT</div><div>BESCOM electricity<div class="small muted">Estimated from last 3 bills</div></div><b class="num">~${inr(1900)}</b></div>
+      <div class="bill"><div class="date-chip"><b>3</b>NOV</div><div>HDFC credit card<div class="small muted">Salary arrives 2 days before</div></div><b class="num">${inr(18400)}</b></div></div></div>
+    <div class="card"><h3>Goa trip · 15 Dec ${askBtn('goa','Goal card')}</h3>
+      <div class="progress"><span style="width:${26/45*100}%"></span></div>
+      <div class="row between small"><span class="num"><b>${inr(26000)}</b> <span class="muted">of ${inr(45000)}</span></span><span class="pill warn">About 3 weeks behind</span></div></div>
+  </div>`;
+}
+
+function ask(){
+  const intro = !S.chat.length ? `<div class="intro"><div class="mid">I've read 6 months of your money. Where do you want to start?</div>
+    <div class="start">${START.map(([k,q,t])=>`<button data-ask="${k}"><span>${q}</span><small>${t}</small></button>`).join('')}</div>
+    <div class="small muted">Tap a question, type your own, or hold the mic and talk.</div></div>` : '';
+  return `<div class="chat-wrap"><div class="chat-head"><span class="t">Ask Paisa</span>
+    <div class="tones" role="group" aria-label="Tone">${['neutral','hype','roast','meme'].map(t=>`<button data-tone="${t}" aria-pressed="${S.tone===t}">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div></div>
+    <div class="msgs">${intro}${S.chat.map(renderMsg).join('')}${S.busy?'<div class="typing"><i></i><i></i><i></i></div>':''}</div>
+    <form class="composer" id="composer"><input id="q" placeholder="Ask about your money…" autocomplete="off" aria-label="Ask a question">
+      <button type="button" class="icon-btn mic" data-act="voice" aria-label="Ask by voice">${I.mic}</button></form>
+    ${S.listening?`<div class="listen"><div class="mono muted">LISTENING</div><div class="wave">${Array.from({length:14},(_,i)=>`<i style="animation-delay:${(i%7)*.09}s"></i>`).join('')}</div><div class="heard" id="heard"></div><button class="small muted" data-act="cancelVoice">Cancel</button></div>`:''}
+  </div>`;
+}
+function renderMsg(m){
+  if(m.role==='u') return `<div class="u">${m.from?`<span class="ctx">ABOUT: ${m.from.toUpperCase()}</span>`:''}${m.voice?`<span class="via">${I.mic.replace('<svg','<svg width="11" height="11"')} said</span>`:''}${m.text}</div>`;
+  const sc=SCN[m.key], tone=sc.forceNeutral?'neutral':m.tone, text=sc.say[tone]||sc.say.neutral;
+  return `<div class="a">
+    ${sc.forceNeutral&&m.tone!=='neutral'?`<div class="guard">Switched to a straight answer. Money worries deserve one. Your ${m.tone} mode comes back on the next topic.</div>`:''}
+    ${m.voice?`<div class="spoken">${I.speak}<span>Read aloud: the short answer. The chart stays on screen.</span></div>`:''}
+    <div class="txt">${text}</div>
+    ${sc.viz?`<div class="viz">${sc.viz(m)}</div>`:''}
+    ${sc.src?`<div class="src">${I.check}${sc.src}</div>`:''}
+    ${m.last&&sc.next.length?`<div class="follow">${sc.next.map(([k,l])=>`<button data-ask="${k}">${l}</button>`).join('')}</div>`:''}
+  </div>`;
+}
+let mid=0;
+function askAI(key,{from,voice,text}={}){
+  if(S.busy) return;
+  if(key==='memory'){ S.tab='goals'; render(); return; }
+  const sc=SCN[key]; if(!sc) return;
+  S.screen='app'; S.tab='ask';
+  S.chat.forEach(m=>m.last=false);
+  S.chat.push({role:'u',text:text||sc.q,from,voice});
+  S.busy=true; render();
+  setTimeout(()=>{ S.busy=false; S.chat.push({role:'a',key,tone:S.tone,voice,id:++mid,last:true});
+    if(sc.effect==='nudge' && !S.memory.some(m=>m.nudge)) S.memory.unshift({t:'Late-night weeknight orders are a habit to work on. Remind at 10pm, Mon–Thu.',s:'You told me in chat · just now',nudge:true,fresh:true});
+    render(); },750);
+}
+function freeText(q){
+  const s=q.toLowerCase();
+  const key = /card|bill|debt|loan|emi|worried|stress/.test(s)?'card' : /goa|trip|afford|goal/.test(s)?'goa' : /subscri|netflix|forgot/.test(s)?'subs'
+    : /habit|pattern/.test(s)?'habits' : /when|night|late/.test(s)?'when' : /food|swiggy|zomato/.test(s)?'foodWhy'
+    : /more|higher|last month|september/.test(s)?'higher' : /safe/.test(s)?'safe' : 'where';
+  askAI(key,{text:q});
+}
+
+function goals(){
+  const lvl = S.memory.some(m=>m.nudge)?3:2;
+  const out=`<div class="pad"><div class="h-greet">Goals</div><span class="sync"><i class="dot"></i>Updated with tonight's sync</span>
+    <div class="card"><h3>Goa trip · 15 Dec ${askBtn('goa','Goal card')}</h3>
+      <div class="progress"><span style="width:${26/45*100}%"></span></div>
+      <div class="row between small"><span class="num"><b>${inr(26000)}</b> <span class="muted">of ${inr(45000)}</span></span><span class="pill warn">About 3 weeks behind</span></div></div>
+    <div class="card"><h3>Emergency fund</h3>
+      <div class="progress"><span style="width:${64/120*100}%"></span></div>
+      <div class="row between small"><span class="num"><b>${inr(64000)}</b> <span class="muted">of ${inr(120000)} · 3 months of bills</span></span><span class="pill good">On track</span></div></div>
+    <div class="card"><h3>What Paisa knows about you</h3>
+      <p class="small ink2" style="margin:6px 0 4px">Everything Paisa personalises comes from this list. Remove anything that's wrong.</p>
+      <div>${S.memory.map((m,i)=>`<div class="mem ${m.fresh?'new':''}"><span>${m.t}</span><button class="x" data-forget="${i}" aria-label="Forget this">Forget</button><span class="tag">${m.s}</span></div>`).join('')}</div>
+      <div class="ladder">
+        <div class="${lvl>=1?'on':''}"><b>LEVEL 1</b>Learns from your transactions</div>
+        <div class="${lvl>=2?'on':''}"><b>LEVEL 2</b>Learns from your corrections</div>
+        <div class="${lvl>=3?'on':''}"><b>LEVEL 3</b>Remembers what you tell it</div>
+      </div></div>
+  </div>`;
+  S.memory.forEach(m=>m.fresh=false);
+  return out;
+}
+
+// ---------- Notes rail ----------
+const NOTES={
+  onb1:['Soft onboarding: intent','<li><b>Choosing, not typing.</b> Chips take one tap and give the agent a ranking signal from the first second.</li><li><b>No persuasion screens.</b> We assume people chose an advisor app on purpose, so we only ask for intent and consent.</li><li>Picking "Save for a trip" opens a sub-chip so the goal is captured during setup.</li>'],
+  onb2:['Consent is a trust moment','<li><b>System:</b> India\'s Account Aggregator gives consent-based, read-only access that is pulled in batches. It is not a live feed.</li><li>The three promises (read-only, duration, revoke) answer the three fears before anyone asks.</li><li><b>Edge case:</b> declined consent leads to a sample-data mode, not a dead end.</li>'],
+  onb3:['Waiting is designed, not hidden','<li>A fetch takes 30 seconds to 2 minutes. Showing real steps and early findings makes the wait feel like progress.</li><li><b>No cold start:</b> 6 months of history arrive with consent, so insights are possible on day one.</li><li><b>Edge case:</b> slow or failed fetch. The user can leave and gets a notification when it is done.</li>'],
+  onb4:['The aha moment before Home','<li>The first screen after setup is one insight, not a dashboard.</li><li><b>Salary confirmation</b> is the one fact everything depends on, so we ask once and early. Choosing "No" leads to the salary-not-detected state.</li>'],
+  home:['Home: understand it in 5 seconds','<li><b>Money weather</b> answers "am I okay?" in human terms. It is a state, not a fake-precise score.</li><li><b>Safe to spend today</b> reframes "daily salary": (income − bills − goal saving) ÷ days left. Today\'s spend is labelled estimated because it comes from SMS until the next bank sync.</li><li><b>One insight card per sync.</b> "Not useful" retrains the ranking.</li><li>Every widget has <b>Ask</b>, which opens the AI with that widget\'s context. That is what makes it an agent rather than a chatbot.</li><li>Every number shows how fresh it is.</li>'],
+  ask:['Ask Paisa: exploratory, not a text dump','<li>Starter questions are chips. Five scenarios are built; free text is routed to the closest one.</li><li>Each answer is <b>short text, then an interactive chart, then the source, then follow-up chips</b>.</li><li><b>Tone modes</b> change the voice, never the numbers. Debt and stress topics switch to neutral automatically (try "My card bill is due").</li><li><b>Voice:</b> tap the mic. The spoken answer is a short summary and the chart carries the detail.</li>'],
+  hero:['Hero story: the Goa trip','<li>1. Where is my money going? Treemap with food highlighted.</li><li>2. Why is food up? Order count, not order size.</li><li>3. When? Heatmap shows weeknights after 10pm.</li><li>4. What does it cost me? Projection slider: a 70% cut makes the trip on time.</li><li>5. Act: a 10pm nudge, saved to memory.</li><li>Each step is <b>one tap</b>. The user uncovers the insight; the AI never dumps it all at once.</li>'],
+  goals:['Personalisation you can see','<li>Personalisation grows from data, not from message count: transactions, then corrections, then things you say.</li><li><b>"What Paisa knows about you"</b> makes memory visible and deletable, which builds trust.</li><li>Set the 10pm nudge in the hero story and a new memory appears here.</li>'],
+};
+function renderNotes(){
+  let k = S.screen.startsWith('onb') ? S.screen : S.tab;
+  if(k==='ask' && S.chat.some(m=>m.key==='when'||m.key==='goa'||m.key==='foodWhy')) k='hero';
+  const [h,b]=NOTES[k]; document.getElementById('notes-body').innerHTML=`<h2>${h}</h2><ul>${b}</ul>`;
+  const cur = S.screen.startsWith('onb')?'onb1':(k==='hero'?'hero':S.tab);
+  document.querySelectorAll('#jump button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.go===cur)));
+  document.querySelectorAll('#states button').forEach(x=>x.setAttribute('aria-pressed', String(S.edge[x.dataset.edge])));
+}
+
+// ---------- Events ----------
+function toast(t){ const el=document.createElement('div'); el.className='toast'; el.textContent=t; screen.appendChild(el); setTimeout(()=>el.remove(),2200); }
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-drill],[data-cell]'); if(!t) return;
+  const d=t.dataset;
+  if(d.go){
+    if(d.go==='hero'){ S.screen='app'; S.chat=[]; S.tab='ask'; render(); askAI('where'); return; }
+    if(d.go==='onb1'){ S.chat=[]; }
+    if(d.go.startsWith('onb')) S.screen=d.go; else { S.screen='app'; S.tab=d.go==='home'?'home':d.go; if(d.go==='onb2') S.screen='onb2'; }
+    if(d.go==='home'&&!S.salaryConfirmed) S.edge.salary=true;
+    render(); return;
+  }
+  if(d.tab){ S.tab=d.tab; render(); view.scrollTop=0; return; }
+  if(d.intent){ S.intents.has(d.intent)?S.intents.delete(d.intent):S.intents.add(d.intent); render(); return; }
+  if(d.bank){ S.banks.has(d.bank)?S.banks.delete(d.bank):S.banks.add(d.bank); render(); return; }
+  if(d.salary){ S.salaryConfirmed=d.salary==='yes'; S.edge.salary=!S.salaryConfirmed; render(); return; }
+  if(d.ask){ askAI(d.ask,{from:d.from}); return; }
+  if(d.tone){ S.tone=d.tone; render(); return; }
+  if(d.edge){ S.edge[d.edge]=!S.edge[d.edge]; if(S.screen.startsWith('onb')) S.screen='app'; S.tab='home'; render(); return; }
+  if(d.forget!==undefined){ S.memory.splice(+d.forget,1); render(); toast('Forgotten. Paisa will stop using this.'); return; }
+  if(d.drill!==undefined){ const m=S.chat.find(m=>m.id==d.mid); m.drill=d.drill||null; render(); return; }
+  if(d.cell){ const [day,j,v]=d.cell.split('|'); const m=S.chat.find(m=>m.id==d.mid); const slot=['breakfast','lunch','evening','after 10pm'][j];
+    m.sel=day+j; m.selText=`${day}, ${slot}: ${v} order${v==1?'':'s'} in October${+v?`, about ${inr(v*390)}`:''}.`; render(); return; }
+  const a=d.act;
+  if(a==='dismiss'){ S.insightDismissed=true; render(); }
+  if(a==='retry'){ S.edge.sync=false; render(); toast('Synced. All accounts are up to date.'); }
+  if(a==='sample'){ S.edge.sample=true; S.screen='app'; S.tab='home'; render(); }
+  if(a==='voice'){ S.listening=true; render(); const heard='where is my money going this month';
+    let i=0; const tick=setInterval(()=>{ const h=document.getElementById('heard'); if(!h||!S.listening){clearInterval(tick);return;} h.textContent='"'+heard.slice(0,i+=3)+(i<heard.length?'':'"');
+      if(i>=heard.length){ clearInterval(tick); setTimeout(()=>{ if(!S.listening) return; S.listening=false; askAI('where',{voice:true,text:'Where is my money going this month?'}); },600);} },70); }
+  if(a==='cancelVoice'){ S.listening=false; render(); }
+});
+document.addEventListener('input',e=>{
+  const id=e.target.dataset.cut; if(!id) return;
+  const m=S.chat.find(m=>m.id==id); m.cut=e.target.value/100;
+  const box=e.target.closest('.viz'); box.innerHTML=vizGoa(m); const s=box.querySelector('input'); s.focus();
+});
+document.addEventListener('submit',e=>{ e.preventDefault(); const q=document.getElementById('q').value.trim(); if(q) freeText(q); });
+
+render();
+</script>

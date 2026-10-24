@@ -1,0 +1,261 @@
+<title>Paisa Design Rationale</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column with wide tables and diagrams that break out of it; sticky section index on desktop. */
+:root{
+  --bg:#F4F6F1; --surface:#FFFFFF; --sunk:#E9EDE6;
+  --ink:#14201C; --ink-2:#4A5852; --ink-3:#7E8A84; --line:#DCE2DA;
+  --teal:#0E6B5C; --teal-soft:#D9ECE5; --mari:#C47A0A; --mari-soft:#FBEBCF; --bad:#C24E37;
+  --display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"DM Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111816; --surface:#19221F; --sunk:#141C19; --ink:#E8EFEB; --ink-2:#A7B5AF; --ink-3:#73817B; --line:#28332F;
+  --teal:#4FC2A8; --teal-soft:#16382F; --mari:#F0AE3E; --mari-soft:#3A2B10; --bad:#E8775F; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#111816; --surface:#19221F; --sunk:#141C19; --ink:#E8EFEB; --ink-2:#A7B5AF; --ink-3:#73817B; --line:#28332F;
+  --teal:#4FC2A8; --teal-soft:#16382F; --mari:#F0AE3E; --mari-soft:#3A2B10; --bad:#E8775F; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--teal)}
+.wrap{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:200px minmax(0,1fr);gap:56px;padding-block:56px 96px}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;display:grid;gap:6px;font-size:13.5px}
+nav.toc a{color:var(--ink-3);text-decoration:none}
+nav.toc a:hover{color:var(--ink)}
+nav.toc .eyebrow{margin-bottom:6px}
+main{min-width:0;max-width:720px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(38px,6vw,62px);line-height:1.02;letter-spacing:-.03em;margin:10px 0 18px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--teal)}
+h2{font-family:var(--display);font-weight:700;font-size:28px;letter-spacing:-.015em;line-height:1.15;margin:0 0 12px;text-wrap:balance}
+h3{font-size:17px;margin:26px 0 8px}
+p{margin:0 0 14px;color:var(--ink-2)} p b,li b{color:var(--ink)}
+.lede{font-size:20px;line-height:1.5;color:var(--ink-2)}
+section{padding-top:56px;margin-top:56px;border-top:1px solid var(--line)}
+ul{padding-left:20px;margin:0 0 14px;color:var(--ink-2);display:grid;gap:6px}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:30px}
+.meta div{background:var(--surface);padding:14px 16px}
+.meta dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.meta dd{margin:4px 0 0;font-weight:500;font-size:14.5px;line-height:1.35}
+.cta{display:inline-flex;gap:8px;align-items:center;margin-top:24px;padding:12px 20px;border-radius:999px;background:var(--teal);color:var(--bg);font-weight:600;text-decoration:none}
+.story{background:var(--ink);color:var(--bg);border-radius:20px;padding:26px 28px;margin:6px 0 10px}
+.story p{color:color-mix(in srgb,var(--bg) 82%,transparent);margin-bottom:12px}
+.story p:last-child{margin:0}
+.story .t{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--mari);display:block;margin-bottom:2px}
+.tbl{overflow-x:auto;margin:10px 0 18px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:560px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-top:1px solid var(--line)}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:500;border-top:0;background:var(--sunk)}
+td{color:var(--ink-2)} td:first-child{color:var(--ink);font-weight:500}
+.pipe{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0 8px;align-items:stretch}
+.pipe div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13.5px;position:relative;color:var(--ink-2)}
+.pipe b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
+.pipe .src{border-color:var(--teal)}
+.pipe div:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:13px}
+.callout{border-left:3px solid var(--mari);background:var(--mari-soft);padding:12px 16px;border-radius:0 12px 12px 0;margin:14px 0;color:var(--ink)}
+.chain{display:grid;gap:8px;counter-reset:c;margin:12px 0 16px;padding:0;list-style:none}
+.chain li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start;background:var(--surface);border-radius:12px;padding:12px 14px}
+.chain li::before{counter-increment:c;content:counter(c);font-family:var(--display);font-weight:700;font-size:20px;color:var(--teal);line-height:1.2}
+.chain li span{color:var(--ink-2);font-size:14.5px}
+.anatomy{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.anatomy span{padding:8px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:13.5px}
+.anatomy span:nth-child(2){border-color:var(--teal);background:var(--teal-soft)}
+.ladder{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.ladder div{background:var(--surface);border-radius:12px;padding:14px;font-size:14px;color:var(--ink-2)}
+.ladder b{display:block;font-family:var(--mono);font-size:11px;color:var(--teal);letter-spacing:.06em;margin-bottom:4px}
+@media (max-width:860px){ .wrap{grid-template-columns:minmax(0,1fr);gap:0;padding-block:32px 64px} nav.toc{display:none} }
+@media (max-width:620px){ .meta{grid-template-columns:repeat(2,minmax(0,1fr))} .pipe{grid-template-columns:minmax(0,1fr)} .pipe div:not(:last-child)::after{content:"↓";right:50%;top:auto;bottom:-15px;transform:none} .ladder{grid-template-columns:minmax(0,1fr)} section{padding-top:40px;margin-top:40px} }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Sections">
+  <div class="eyebrow">Contents</div>
+  <a href="#story">Storyline</a><a href="#assumptions">Assumptions</a><a href="#constraints">Constraints</a><a href="#system">System first</a>
+  <a href="#ia">Navigation</a><a href="#onboarding">Onboarding</a><a href="#home">Home</a><a href="#ai">Ask Paisa</a>
+  <a href="#personal">Personalisation</a><a href="#edges">Edge cases</a><a href="#next">What's next</a>
+</nav>
+<main>
+  <div class="eyebrow">Product design assignment · AI personal finance</div>
+  <h1>Paisa: an advisor that <em>notices</em> before you ask</h1>
+  <p class="lede">A mobile finance app with two sides: one where you see and manage your money at a glance, and one where an AI agent helps you dig into spending, savings and goals. Every answer comes with a chart you can touch.</p>
+  <dl class="meta">
+    <div><dt>Role</dt><dd>Product designer (ex-engineer)</dd></div>
+    <div><dt>Market</dt><dd>India: Account Aggregator, UPI, ₹</dd></div>
+    <div><dt>Persona</dt><dd>Riya, 26, salaried, saving for Goa</dd></div>
+    <div><dt>Deliverables</dt><dd>Home screen, conversational AI</dd></div>
+  </dl>
+  <a class="cta" href="https://claude.ai/artifact/Ak9F4N7ywrm5i9Ha4vjgej">Open the clickable prototype →</a>
+
+  <section id="story">
+    <div class="eyebrow">01 · Storyline</div>
+    <h2>A Thursday night, 9:48pm</h2>
+    <div class="story">
+      <p><span class="t">21:48 · THU 22 OCT</span>Riya is about to order dinner again. She opens Paisa first, because the weather on Home has said "partly cloudy" all week.</p>
+      <p><span class="t">HOME</span>She has ₹460 left to spend today. An insight card from tonight's sync says food delivery is up 42%, mostly after 10pm on weeknights. She taps "Show me why".</p>
+      <p><span class="t">ASK PAISA</span>A treemap shows the orange food block is the biggest. Her orders aren't bigger, there are just more of them. A heatmap lights up Monday to Thursday after 10pm. A slider shows that cutting those orders by 70% gets her to Goa on time.</p>
+      <p><span class="t">ACTION</span>She sets a 10pm weeknight nudge. Paisa adds it to "What Paisa knows about you". She typed nothing; every step was one tap.</p>
+    </div>
+    <p>The whole design works backwards from this moment: <b>the user finds the insight themselves</b>, the AI guides each step, and the conversation ends with an action instead of a wall of text.</p>
+  </section>
+
+  <section id="assumptions">
+    <div class="eyebrow">02 · Assumptions</div>
+    <h2>What I decided before designing</h2>
+    <p>Each assumption closes off an ambiguity. The third column says what would change if the assumption turned out to be wrong.</p>
+    <div class="tbl"><table>
+      <tr><th>Assumption</th><th>Why</th><th>If it's wrong</th></tr>
+      <tr><td>The whole app is the advisor</td><td>The AI is the product, not a feature added to a banking app. Home and chat share one brain.</td><td>If it were a feature inside a bank app, it would become a floating entry point and Home would belong to the bank.</td></tr>
+      <tr><td>Users chose a finance advisor on purpose</td><td>No persuasion onboarding is needed. We only ask for intent and consent.</td><td>Add a value-preview step before consent.</td></tr>
+      <tr><td>Bank data comes from Account Aggregator consent</td><td>India's regulated, read-only rail. It gives 6–12 months of history up front.</td><td>Fall back to SMS parsing and statement upload. Insights take longer.</td></tr>
+      <tr><td>Paisa explains and recommends, it never moves money</td><td>Trust and regulation. Read-only access keeps the consent ask small.</td><td>Payments would need a separate trust and authentication layer.</td></tr>
+      <tr><td>One primary persona: a young salaried professional</td><td>A predictable salary makes "safe to spend" reliable.</td><td>Freelancers need income smoothing (see edge cases).</td></tr>
+      <tr><td>Retention is out of scope</td><td>The brief is about understanding money, not growth.</td><td>Re-engagement through goal nudges and lifecycle communication.</td></tr>
+    </table></div>
+  </section>
+
+  <section id="constraints">
+    <div class="eyebrow">03 · Constraints</div>
+    <h2>Rules the design must follow</h2>
+    <ul>
+      <li><b>No fake real-time.</b> Bank data refreshes up to 4 times a day. Today's spend comes from SMS and is labelled "estimated".</li>
+      <li><b>No made-up numbers.</b> Every AI claim is calculated from the user's own data and shows its source ("Based on 26 Swiggy and Zomato orders").</li>
+      <li><b>Voice and chat give the same answer.</b> Voice reads a short summary aloud and the chart stays on screen.</li>
+      <li><b>Choosing over typing.</b> Onboarding and follow-ups use chips. Free text is supported and routed to the closest scenario.</li>
+      <li><b>Mobile, one hand.</b> Charts are readable at 360px wide, with tap targets of at least 40px.</li>
+      <li><b>Privacy is visible.</b> Consent can be revoked, and memory can be viewed and edited.</li>
+    </ul>
+  </section>
+
+  <section id="system">
+    <div class="eyebrow">04 · System first</div>
+    <h2>The UI can only show what the pipeline can produce</h2>
+    <p>Coming from engineering, I mapped the data before any screens. This pipeline decides which numbers can be trusted and how fresh they are.</p>
+    <div class="pipe">
+      <div class="src"><b>Sources</b>Account Aggregator pull (batches) · SMS and UPI alerts (near real-time)</div>
+      <div><b>Normalise</b>Merge duplicates and reconcile SMS estimates with bank records</div>
+      <div><b>Enrich</b>Clean merchant names, assign categories with confidence, detect salary and recurring payments</div>
+      <div><b>Model</b>Your normal (6-month bands), safe to spend, goal pace, anomalies</div>
+      <div><b>Surface</b>One insight per sync on Home · answers in Ask Paisa · memory</div>
+    </div>
+    <div class="tbl"><table>
+      <tr><th>Reality</th><th>Design response</th></tr>
+      <tr><td>Data lags by hours</td><td>A freshness stamp on Home ("Synced 2h ago"). Today's spend is marked "estimated".</td></tr>
+      <tr><td>History arrives with consent</td><td>No cold start. The first insight appears right after setup.</td></tr>
+      <tr><td>UPI merchant strings are messy</td><td>"Help me sort 3 payments" uses chips. Each answer improves categorisation.</td></tr>
+      <tr><td>Salary needs 1–2 cycles to detect</td><td>Confirm it once during onboarding. If it isn't found, ask for an income range.</td></tr>
+      <tr><td>Insights depend on syncs</td><td>Insight cards are generated per sync, not continuously, which also limits noise.</td></tr>
+    </table></div>
+  </section>
+
+  <section id="ia">
+    <div class="eyebrow">05 · Navigation</div>
+    <h2>Three tabs, plus "Ask" on every widget</h2>
+    <p><b>Home · Ask Paisa · Goals.</b> The tab bar makes the brief's two sides obvious. The detail that makes it an agent is that every Home widget has an <b>Ask</b> button, which opens the conversation with that widget's context already loaded. The agent also sends work back: one insight card per sync on Home.</p>
+    <h3>Alternatives I would defend in the interview</h3>
+    <div class="tbl"><table>
+      <tr><th>Option</th><th>Good for</th><th>Why not primary</th></tr>
+      <tr><td>Floating orb with a full-screen sheet</td><td>AI feels present everywhere, Home keeps full width</td><td>Hides the AI as a secondary feature, and the conversation history has no home</td></tr>
+      <tr><td>AI-first home (chat is the home screen)</td><td>Boldest take on "the AI is the product"</td><td>Fails the "understand it at a glance" test. You have to read before you know whether you're okay</td></tr>
+    </table></div>
+  </section>
+
+  <section id="onboarding">
+    <div class="eyebrow">06 · Onboarding</div>
+    <h2>Intent, consent, wait, aha</h2>
+    <ol class="chain">
+      <li><div><b>Intent chips</b><br><span>"What do you want your money to do?" Choosing "Save for a trip" opens sub-chips for place, amount and date, so the goal exists from minute one.</span></div></li>
+      <li><div><b>Consent</b><br><span>Three promises up front: read-only, a 12-month duration, revoke any time. Declining leads to sample-data mode, not a dead end.</span></div></li>
+      <li><div><b>Designed wait</b><br><span>Real steps and early findings ("found ₹85,000 on the 1st") while 6 months of data load. If it's slow, the user can leave and gets a notification.</span></div></li>
+      <li><div><b>First insight and salary check</b><br><span>One insight before the dashboard. The salary confirmation anchors every later calculation.</span></div></li>
+    </ol>
+  </section>
+
+  <section id="home">
+    <div class="eyebrow">07 · Home</div>
+    <h2>Understandable in 5 seconds, explorable for 5 minutes</h2>
+    <p>Ordered by the question each widget answers, from "am I okay?" down to "what's next?".</p>
+    <div class="tbl"><table>
+      <tr><th>Widget</th><th>Question it answers</th><th>Alternative</th></tr>
+      <tr><td>Money weather</td><td>Am I okay? A human state plus one line of why.</td><td>A 0–100 score ring (familiar, but it feels like a grade and hides why) or a row of 3 vitals (transparent but busy)</td></tr>
+      <tr><td>Safe to spend today</td><td>What can I spend right now? (income − bills − goal saving) ÷ days left</td><td>"Daily earnings" (₹2,800 a day). Rejected because rent day breaks it.</td></tr>
+      <tr><td>Insight card</td><td>What should I know? One per sync, can be dismissed.</td><td>A feed (noisy, goes stale) or anomaly-only (calm, but feels passive)</td></tr>
+      <tr><td>Where the ₹85,000 goes</td><td>Cash flow as one bar: bills, saving, spent, left</td><td>A Sankey "river" (richer, but hard to read at phone width)</td></tr>
+      <tr><td>Spending pace</td><td>Am I on my normal pace? Cumulative line against a 6-month band.</td><td>A plain budget progress bar (has no sense of "normal")</td></tr>
+      <tr><td>Habit to watch</td><td>What behaviour is driving it?</td><td>A list of the top 3 habits</td></tr>
+      <tr><td>Coming up, goal</td><td>What's next, and am I on track?</td><td>A calendar strip</td></tr>
+    </table></div>
+    <div class="callout">Charts point at the insight. Only the thing that matters gets colour (marigold). Everything else stays muted.</div>
+  </section>
+
+  <section id="ai">
+    <div class="eyebrow">08 · Ask Paisa</div>
+    <h2>An exploration you steer, not a text dump</h2>
+    <p>Every answer has the same structure, so people learn to scan it:</p>
+    <div class="anatomy"><span>One or two sentences</span><span>Interactive chart</span><span>Source and freshness</span><span>Follow-up chips</span></div>
+    <h3>Five scenarios built</h3>
+    <div class="tbl"><table>
+      <tr><th>Question</th><th>Chart</th><th>Interaction</th></tr>
+      <tr><td>Where's my money going?</td><td>Treemap, food highlighted</td><td>Tap a block to see merchants</td></tr>
+      <tr><td>Why is this month higher?</td><td>Waterfall, Sep → Oct</td><td>Each bar is one cause</td></tr>
+      <tr><td>Can I afford Goa in Dec?</td><td>Projection line</td><td>Drag the slider and watch the date move</td></tr>
+      <tr><td>Any subscriptions I forgot?</td><td>Recurring list with flags</td><td>Set a reminder before renewal</td></tr>
+      <tr><td>What are my habits?</td><td>Weekday × time heatmap</td><td>Tap a cell for detail</td></tr>
+    </table></div>
+    <h3>Tone modes, with a guardrail</h3>
+    <p>Neutral, Hype, Roast and Meme change the voice, never the numbers. Topics about debt or stress <b>automatically switch to neutral</b> and say so. Teasing someone who is worried about a bill would break trust.</p>
+    <h3>Voice</h3>
+    <p>Hold the mic and see a live transcript. The answer is read aloud as a short summary while the chart renders. Voice and text are two ways into the same answer.</p>
+  </section>
+
+  <section id="personal">
+    <div class="eyebrow">09 · Personalisation</div>
+    <h2>Driven by data, not by message count</h2>
+    <p>My first idea was "personalise after about 100 messages". I replaced it because the data already exists on day one. Personalisation builds up in layers, and all of it shows in an editable memory panel.</p>
+    <div class="ladder">
+      <div><b>LEVEL 1 · DAY 0</b>Transactions: salary, bills, your normal, habits</div>
+      <div><b>LEVEL 2 · WEEKS</b>Corrections: re-categorised payments, dismissed insights</div>
+      <div><b>LEVEL 3 · ONGOING</b>Things you say: goals, triggers, nudges you set</div>
+    </div>
+    <p>"What Paisa knows about you" lists each memory with its source. Forgetting one changes behaviour immediately.</p>
+  </section>
+
+  <section id="edges">
+    <div class="eyebrow">10 · Edge cases</div>
+    <h2>The flows people usually miss</h2>
+    <div class="tbl"><table>
+      <tr><th>Case</th><th>Handling</th></tr>
+      <tr><td>One bank fails to sync</td><td>Red stamp naming the bank and the age of its data, a banner with Retry. Numbers stay visible.</td></tr>
+      <tr><td>Salary not detected (freelancer, new job)</td><td>Safe-to-spend asks for an income range with chips. Irregular income uses a 3-month average.</td></tr>
+      <tr><td>Messy UPI merchant</td><td>"Help me sort" card with category chips. The answer applies to all similar payments.</td></tr>
+      <tr><td>Consent declined</td><td>Sample-data mode with a persistent "Connect bank" banner.</td></tr>
+      <tr><td>SMS and bank record disagree</td><td>The bank record wins after sync. Today's figure is always labelled "estimated".</td></tr>
+      <tr><td>Insight not useful</td><td>"Not useful" lowers the ranking for that type of insight. The next card comes after the next sync.</td></tr>
+      <tr><td>Stressful topic in Roast mode</td><td>Switches to neutral automatically, explains why, and restores the mode on the next topic.</td></tr>
+      <tr><td>Question outside the five scenarios</td><td>Routed to the closest scenario by keyword. In production: a general answer engine with the same structure.</td></tr>
+      <tr><td>Joint or shared accounts</td><td>Out of scope for v1. Would need per-account inclusion toggles.</td></tr>
+    </table></div>
+  </section>
+
+  <section id="next">
+    <div class="eyebrow">11 · What's next</div>
+    <h2>What the agent could do beyond the five scenarios</h2>
+    <ul>
+      <li><b>Pre-emptive alerts:</b> "Your card bill plus rent lands in the same week as a low balance."</li>
+      <li><b>Bill negotiation and switching:</b> find a cheaper plan for a recurring payment.</li>
+      <li><b>Tax season:</b> find 80C and 80D-eligible spending from transactions.</li>
+      <li><b>Shared goals:</b> a Goa trip pooled with friends, with settlement.</li>
+      <li><b>Weekly recap:</b> a 30-second voice summary every Sunday.</li>
+    </ul>
+    <h3>How I'd measure it</h3>
+    <ul>
+      <li>Insight usefulness: share of insight cards opened versus dismissed.</li>
+      <li>Asks from widgets as a share of all asks, which shows whether the agent pattern works.</li>
+      <li>Goals on track after 60 days.</li>
+    </ul>
+  </section>
+</main>
+</div>

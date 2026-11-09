@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nudge Case Study — Arshdeep Kaur</title>
+  <meta name="description" content="Nudge: a personal finance app with an AI assistant that explains your money with charts you can touch — a case study by Arshdeep Kaur." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="case-study.css" />
+  <style>
+    /* ── Nudge page ── */
+    :root { --nd: #4f46e5; --nd-tint: #eceafd; --nd-ink: #2b2b2d; }
+    .nudge .stage { background: linear-gradient(160deg, #eeecfd, #d9d6f7); }
+    .nudge .stage figcaption { color: #5a55b8; }
+    .nudge .state .phone { background: linear-gradient(160deg, #eeecfd, #d9d6f7); }
+
+    .persona { display: grid; grid-template-columns: 1fr 1.25fr; gap: 16px; margin-top: 28px; }
+    .persona-card { background: var(--nd-tint); border-radius: var(--radius); padding: 26px; }
+    .persona-card .k { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--nd); }
+    .persona-card h4 { font-size: 24px; font-weight: 600; letter-spacing: -.02em; margin: 8px 0 10px; }
+    .persona-card p { font-size: 16px; color: #3d3b6b; margin: 0 0 14px; line-height: 1.5; }
+    .persona-card blockquote { font-family: var(--serif); font-style: italic; font-size: 26px; line-height: 1.25; color: var(--ink); }
+    .assume { display: grid; gap: 10px; }
+    .assume div { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; display: flex; gap: 14px; font-size: 15.5px; color: var(--ink-2); line-height: 1.45; }
+    .assume b { font-family: var(--mono); color: var(--nd); font-size: 13px; padding-top: 2px; }
+
+    .rules { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 28px; }
+    .rules .card .k { color: var(--nd); font-size: 22px; font-family: var(--sans); font-weight: 600; letter-spacing: 0; }
+
+    .swatches { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+    .swatches span { flex: 1 1 120px; border-radius: 12px; padding: 54px 12px 10px; font-family: var(--mono); font-size: 11px; color: #fff; }
+
+    /* Weather toggle */
+    .seg { display: flex; width: 100%; gap: 2px; padding: 4px; background: #fff; border: 1px solid var(--line); border-radius: 999px; margin-bottom: 20px; }
+    .seg button { flex: 1; padding: 8px 4px; border-radius: 999px; font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+    .seg button[aria-selected="true"] { background: var(--nd); color: #fff; }
+    .weather-phone { position: relative; }
+    .weather-phone img { display: block; width: 100%; height: auto; border-radius: 30px; box-shadow: 0 24px 50px -28px rgba(40,40,90,.45); transition: opacity .35s ease; }
+    .weather-phone img + img { position: absolute; inset: 0; }
+    .weather-phone img:not(.show) { opacity: 0; }
+
+    .stage.tall { align-items: flex-start; }
+    .stage .verdict { display: inline-block; margin-top: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; padding: 4px 10px; border-radius: 999px; background: #fff; color: var(--dim); }
+    .stage .verdict.pick { background: var(--nd); color: #fff; }
+
+    .card-wall { columns: 4; column-gap: 14px; margin-top: 28px; }
+    .card-wall img { display: block; width: 100%; height: auto; margin-bottom: 14px; break-inside: avoid; border-radius: 18px; background: #fff; box-shadow: 0 14px 30px -22px rgba(40,40,90,.4); }
+
+    .tones { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+    .tones span { font-family: var(--mono); font-size: 12px; padding: 6px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); }
+    .tones span b { color: var(--nd); font-weight: 500; }
+
+    /* Conversation explorer */
+    .explorer { display: grid; grid-template-columns: 1fr 360px; gap: clamp(24px, 4vw, 56px); align-items: start; margin-top: 32px; }
+    .qs { list-style: none; display: grid; gap: 8px; }
+    .qs button { width: 100%; text-align: left; padding: 16px 18px; border-radius: 16px; background: #fff; border: 1px solid var(--line); transition: border-color .2s, background .2s; }
+    .qs button:hover { border-color: var(--nd); }
+    .qs button[aria-selected="true"] { background: var(--nd); border-color: var(--nd); color: #fff; }
+    .qs .q { display: block; font-weight: 600; font-size: 17px; letter-spacing: -.01em; }
+    .qs .a { display: block; font-size: 14.5px; line-height: 1.45; margin-top: 4px; color: var(--ink-2); }
+    .qs button[aria-selected="true"] .a { color: #dcdaff; }
+    .viewer { position: sticky; top: 90px; background: linear-gradient(160deg, #eeecfd, #d9d6f7); border-radius: 28px; padding: 16px; }
+    .viewer .screen { height: min(720px, 78vh); overflow-y: auto; border-radius: 28px; background: #fff; box-shadow: 0 24px 50px -28px rgba(40,40,90,.45); overscroll-behavior: contain; }
+    .viewer .screen img { display: none; width: 100%; height: auto; }
+    .viewer .screen img.show { display: block; }
+    .viewer .hint { text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: #5a55b8; margin-top: 12px; }
+
+    @media (max-width: 960px) {
+      .rules { grid-template-columns: 1fr 1fr; }
+      .persona { grid-template-columns: 1fr; }
+      .card-wall { columns: 2; }
+      .explorer { grid-template-columns: 1fr; }
+      .viewer { position: static; max-width: 380px; margin: 0 auto; order: -1; }
+    }
+    @media (max-width: 600px) {
+      .rules { grid-template-columns: 1fr; }
+      .qs .a { display: none; }
+      .qs button[aria-selected="true"] .a { display: block; }
+    }
+  </style>
+</head>
+<body class="nudge">
+
+  <header class="cs-bar">
+    <a class="back" href="index.html">← Arshdeep Kaur</a>
+    <span class="title">NUDGE · CASE STUDY</span>
+    <a class="btn" href="assets/Arshdeep_Kaur_CV.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+  </header>
+
+  <main>
+    <!-- ───────────── Hero ───────────── -->
+    <div class="cs-wrap cs-hero">
+      <p class="label">// MOBILE APP · FINTECH · AI ASSISTANT</p>
+      <h1>Nudge: your money, <em>explained</em></h1>
+      <p class="lede">
+        A personal finance app with two sides: a Home where you see your money at a glance, and an AI assistant
+        you talk to when you want to understand it. The assistant doesn't wait to be asked, and it answers
+        with charts you can touch instead of numbers buried in a sentence.
+      </p>
+    </div>
+
+    <div class="cs-wrap">
+      <div class="stage">
+        <figure><img src="assets/case-studies/nudge-web/home-sunny.webp" width="786" height="1704" alt="Home screen in the Sunny state" /><figcaption>HOME</figcaption></figure>
+        <figure><img src="assets/case-studies/nudge-web/ask-agent.webp" width="786" height="1704" alt="Ask AI opening with a proactive insight about weekend spending" /><figcaption>ASK AI</figcaption></figure>
+        <figure><img src="assets/case-studies/nudge-web/ask-voice.webp" width="786" height="1704" alt="Voice mode listening to a question" /><figcaption>VOICE</figcaption></figure>
+      </div>
+    </div>
+
+    <!-- ───────────── 01 The problem ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 01 — THE PROBLEM</p>
+          <h2>"I know I overspend a little. <em>I just don't know where.</em>"</h2>
+          <p>
+            Most money apps are very good at showing numbers and very bad at explaining them. You see ₹41,200 spent,
+            but not why, not whether it matters, and not what to do about it. Nudge was designed around one person
+            and four honest assumptions.
+          </p>
+        </div>
+        <div class="persona">
+          <div class="persona-card">
+            <p class="k">WHO IT'S FOR</p>
+            <h4>Arsh, 28 · Bengaluru</h4>
+            <p>Salaried, about ₹85k a month. Pays for chai, cabs and late-night food with UPI. Saving for a Goa trip in December and a wedding next year.</p>
+            <blockquote>"I know I overspend a little. I just don't know where."</blockquote>
+          </div>
+          <div class="assume">
+            <div><b>A1</b><span>It's a financial advisor app, not a banking app with an advisor tucked inside.</span></div>
+            <div><b>A2</b><span>Data syncs in near real time, not once a day, so "safe to spend today" can be trusted.</span></div>
+            <div><b>A3</b><span>The user has just downloaded the app: personalisation has to be earned, starting from day one.</span></div>
+            <div><b>A4</b><span>Accounts linked to the phone number are fetched automatically through Account Aggregator.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 02 What it had to do ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 02 — WHAT IT HAD TO DO</p>
+          <h2>Three tests for <em>every</em> decision</h2>
+        </div>
+        <div class="cards">
+          <div class="card"><p class="k">01</p><h4>Two sides, one loop</h4><p>Home is where you see. Ask AI is where you understand. Every Home card is a door into the chat, and every chat ends with something that lands back on Home.</p></div>
+          <div class="card"><p class="k">02</p><h4>An agent, not a chatbot</h4><p>The AI speaks first. It notices a pattern, asks a question back, and suggests an action. It never waits on a blank text box.</p></div>
+          <div class="card"><p class="k">03</p><h4>Show, don't tell</h4><p>Every answer is a chart that points at the insight: highlighted, annotated and touchable, not a number buried in a sentence.</p></div>
+        </div>
+
+        <div class="cs-narrow" style="margin-top: clamp(48px, 7vw, 80px)">
+          <p class="label">// DESIGN PRINCIPLES</p>
+          <h2>Five rules I designed <em>against</em></h2>
+        </div>
+        <div class="rules">
+          <div class="card"><p class="k">1</p><h4>Explain, don't display</h4><p>Every number arrives with its "why".</p></div>
+          <div class="card"><p class="k">2</p><h4>Tap before you type</h4><p>Chips first, voice and text always there. No blank-box anxiety.</p></div>
+          <div class="card"><p class="k">3</p><h4>One answer template</h4><p>Headline → visual → interaction → next step. It scales to an endless chat.</p></div>
+          <div class="card"><p class="k">4</p><h4>Insights end in action</h4><p>A goal, a nudge or a cap, and it lands back on Home.</p></div>
+          <div class="card"><p class="k">5</p><h4>Calm by default</h4><p>Hidden numbers, no shaming, and a tone the user picks.</p></div>
+        </div>
+        <div class="swatches" aria-label="Colour palette">
+          <span style="background:#4f46e5">PRIMARY · ACTIONS, AI</span>
+          <span style="background:#dce1fa;color:#2b2b2d">TINT · CHIPS, SELECTED</span>
+          <span style="background:#2b2b2d">INK · HEADLINES</span>
+          <span style="background:#ea580c">WATCH · OVER PACE</span>
+          <span style="background:#0f766e">GOOD · ON TRACK</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 03 Home ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 03 — HOME</p>
+          <h2>Money weather: <em>one glance, one feeling</em></h2>
+          <p>
+            The calm default puts things in order: what you can spend today, what's about to leave, and what changed this month.
+            On top of it, the header turns spending pace into weather you feel instantly. Same layout, different moods,
+            and the state is never colour alone: it's always an icon, a word and a reason.
+          </p>
+        </div>
+
+        <div class="state">
+          <div class="phone">
+            <div class="seg" role="tablist" aria-label="Money weather">
+              <button role="tab" aria-selected="true" data-w="calm">Default</button>
+              <button role="tab" aria-selected="false" data-w="sunny">☀ Sunny</button>
+              <button role="tab" aria-selected="false" data-w="cloudy">☁ Cloudy</button>
+              <button role="tab" aria-selected="false" data-w="rainy">☂ Rainy</button>
+            </div>
+            <div class="weather-phone">
+              <img class="show" data-w="calm" src="assets/case-studies/nudge-web/home-calm.webp" width="786" height="1704" alt="Calm default home screen" loading="lazy" />
+              <img data-w="sunny" src="assets/case-studies/nudge-web/home-sunny.webp" width="786" height="1704" alt="Home in the Sunny state: Keep Up" />
+              <img data-w="cloudy" src="assets/case-studies/nudge-web/home-cloudy.webp" width="786" height="1704" alt="Home in the Cloudy state: See Why" />
+              <img data-w="rainy" src="assets/case-studies/nudge-web/home-rainy.webp" width="786" height="1704" alt="Home in the Rainy state: Let's Fix It" />
+            </div>
+          </div>
+          <div>
+            <p class="day">TRY THE WEATHER</p>
+            <h3>Every state comes with a next step</h3>
+            <ol class="notes">
+              <li><b>Sunny · Keep Up.</b> You're under pace. The header simply tells you to keep going.</li>
+              <li><b>Cloudy · See Why.</b> Something is drifting. The header becomes a door into Ask AI to find out what.</li>
+              <li><b>Rainy · Let's Fix It.</b> You're over pace. The header offers a fix rather than a warning.</li>
+              <li><b>Safe to spend, explained.</b> <q>Limit = this month's income, minus bills and goal savings, spread over the days left.</q> The number always carries its why.</li>
+              <li><b>A question back, not a verdict.</b> <q>Shopping is up 64%. Is something coming up?</q> One tap on <em>A wedding</em> or <em>Festive season</em> tags those spends and makes the next insight sharper.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="sub-head" style="margin-top: clamp(56px, 8vw, 96px)">
+          <div class="cs-narrow">
+            <h2 style="font-size: clamp(26px, 3vw, 36px)">Three questions Home could answer</h2>
+            <p>I built the full Home three ways, each around a different question, to see which one earns the first screen.</p>
+          </div>
+        </div>
+        <div class="stage tall" style="margin-top: 24px">
+          <figure><img src="assets/case-studies/nudge-web/home-today.webp" width="786" height="2976" alt="Home built around 'Am I okay to spend today?'" loading="lazy" /><figcaption>"AM I OKAY TO SPEND TODAY?"</figcaption><span class="verdict pick">Chosen</span></figure>
+          <figure><img src="assets/case-studies/nudge-web/home-goal.webp" width="786" height="2832" alt="Home built around 'Am I on track for my goal?'" loading="lazy" /><figcaption>"AM I ON TRACK FOR MY GOAL?"</figcaption><span class="verdict">Empty without a goal</span></figure>
+          <figure><img src="assets/case-studies/nudge-web/home-overall.webp" width="786" height="2408" alt="Home built around 'Where do I stand overall?'" loading="lazy" /><figcaption>"WHERE DO I STAND OVERALL?"</figcaption><span class="verdict">Moves monthly</span></figure>
+        </div>
+        <div class="cards" style="margin-top: 16px">
+          <div class="card"><p class="k">Daily check-in</p><h4>Today first</h4><p>Safe to spend, bills due and one insight that asks back. It changes every day, so it earns a daily open.</p></div>
+          <div class="card"><p class="k">Goal first</p><h4>Great for savers</h4><p>Progress, pace and a streak to celebrate. But for anyone without a goal yet, the first screen is empty.</p></div>
+          <div class="card"><p class="k">Big picture</p><h4>Better elsewhere</h4><p>Net worth, cash flow and categories only move monthly. They work better in Accounts or as Ask AI answers.</p></div>
+        </div>
+
+        <div class="sub-head" style="margin-top: clamp(56px, 8vw, 96px)">
+          <div class="cs-narrow">
+            <h2 style="font-size: clamp(26px, 3vw, 36px)">A card library, every one a door into the chat</h2>
+            <p>Each Home card answers one small question with a visual that points at the insight, and leads into Ask AI for the full story.</p>
+          </div>
+        </div>
+        <div class="card-wall">
+          <img src="assets/case-studies/nudge-web/card-01.webp" width="722" height="456" alt="What changed this week" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-05.webp" width="722" height="672" alt="Where it went, October treemap" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-03.webp" width="722" height="502" alt="Safe to spend: earned versus spent" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-09.webp" width="722" height="640" alt="Habits to watch: late-night orders" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-04.webp" width="722" height="628" alt="Safe to spend: today's timeline" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-08.webp" width="722" height="442" alt="October budget pace" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-11.webp" width="722" height="556" alt="This week: Friday and Saturday ran twice the average" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-02.webp" width="722" height="618" alt="In your bank: what's truly free" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-07.webp" width="722" height="602" alt="Money in versus out" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-10.webp" width="722" height="556" alt="Habits to watch: trends" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-06.webp" width="722" height="424" alt="Came in this month" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-13.webp" width="722" height="492" alt="Net worth: own versus owe" loading="lazy" />
+          <img src="assets/case-studies/nudge-web/card-12.webp" width="722" height="540" alt="Net worth, hidden by default" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 04 Ask AI ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 04 — ASK AI</p>
+          <h2>Opening the chat <em>without</em> a blank box</h2>
+          <p>
+            The chat never starts empty. It can open with something it noticed, with questions picked from your data, or with
+            a map of what you can explore, and voice is always one tap away, in English, Hindi or Hinglish.
+          </p>
+          <div class="tones">
+            <span><b>Neutral</b> · a coach</span><span><b>Hype</b> · a cheerleader</span><span><b>Roast</b> · a friend who teases you</span><span><b>Meme</b> · your group chat</span>
+          </div>
+          <p style="margin-top: 14px">Four tones, same facts. Only the delivery changes.</p>
+        </div>
+        <div class="stage" style="margin-top: 28px">
+          <figure><img src="assets/case-studies/nudge-web/ask-agent.webp" width="786" height="1704" alt="Opens with an insight" loading="lazy" /><figcaption>IT SPEAKS FIRST</figcaption></figure>
+          <figure><img src="assets/case-studies/nudge-web/ask-picked.webp" width="786" height="1704" alt="Questions picked from your data" loading="lazy" /><figcaption>PICKED FROM YOUR DATA</figcaption></figure>
+          <figure><img src="assets/case-studies/nudge-web/ask-explore.webp" width="786" height="1704" alt="Explore by intent: understand, decide, plan, grow" loading="lazy" /><figcaption>EXPLORE BY INTENT</figcaption></figure>
+        </div>
+
+        <div class="cs-narrow" style="margin-top: clamp(56px, 8vw, 96px)">
+          <h2>Eight questions, eight charts <em>you can touch</em></h2>
+          <p>
+            Every answer follows the same template: a headline, a visual that points at the insight, an interaction,
+            and a next step that lands back on Home. Pick a question and scroll the phone to play the conversation.
+          </p>
+        </div>
+        <div class="explorer">
+          <ul class="qs" role="tablist" aria-label="Conversations">
+            <li><button role="tab" aria-selected="true" data-c="goal"><span class="q">How can I make Goa on time?</span><span class="a">A runway chart shows Goa slipping two weeks. Drag two sliders until the date turns green, then lock the plan.</span></button></li>
+            <li><button role="tab" aria-selected="false" data-c="where"><span class="q">Where did my money go this month?</span><span class="a">A treemap of the month. Tap Food to reveal a late-night heatmap, then see what that habit costs a year.</span></button></li>
+            <li><button role="tab" aria-selected="false" data-c="short"><span class="q">Why am I short this month?</span><span class="a">A waterfall shows three things changed. One tap shows 143 small UPI payments that quietly added up to ₹11,200.</span></button></li>
+            <li><button role="tab" aria-selected="false" data-c="afford"><span class="q">Can I afford a ₹60k phone?</span><span class="a">Pay now, EMI or wait, compared by what each one costs you, not just the price.</span></button></li>
+            <li><button role="tab" aria-selected="false" data-c="due"><span class="q">What's due, and what can I cancel?</span><span class="a">This week's bills in one timeline, plus the subscription you haven't used in 45 days.</span></button></li>
+            <li><button role="tab" aria-selected="false" data-c="weekends"><span class="q">Do I spend more on weekends?</span><span class="a">A calendar heatmap makes weekends glow. Toggle categories to see brunches and cabs are behind it.</span></button></li>
+            <li><button role="tab" aria-selected="false" data-c="growing"><span class="q">Is my money growing?</span><span class="a">Splits growth into what you saved versus what the market earned, then spots idle cash. Facts, not advice.</span></button></li>
+            <li><button role="tab" aria-selected="false" data-c="wedding"><span class="q">Help me plan my wedding next year</span><span class="a">Three taps set up the plan. Milestones and linked sliders balance it against Goa.</span></button></li>
+          </ul>
+          <div class="viewer">
+            <div class="screen" tabindex="0" aria-label="Conversation screen, scrollable">
+              <img class="show" data-c="goal" src="assets/case-studies/nudge-web/chat-goal.webp" width="786" height="2968" alt="Conversation: reaching the Goa goal on time" loading="lazy" />
+              <img data-c="where" src="assets/case-studies/nudge-web/chat-where.webp" width="786" height="3438" alt="Conversation: where the money went" loading="lazy" />
+              <img data-c="short" src="assets/case-studies/nudge-web/chat-short.webp" width="786" height="3438" alt="Conversation: why short this month" loading="lazy" />
+              <img data-c="afford" src="assets/case-studies/nudge-web/chat-afford.webp" width="786" height="3438" alt="Conversation: affording a phone" loading="lazy" />
+              <img data-c="due" src="assets/case-studies/nudge-web/chat-due.webp" width="786" height="2572" alt="Conversation: bills due and a subscription to cancel" loading="lazy" />
+              <img data-c="weekends" src="assets/case-studies/nudge-web/chat-weekends.webp" width="786" height="3502" alt="Conversation in Roast mode: weekend spending" loading="lazy" />
+              <img data-c="growing" src="assets/case-studies/nudge-web/chat-growing.webp" width="786" height="3502" alt="Conversation: is my money growing" loading="lazy" />
+              <img data-c="wedding" src="assets/case-studies/nudge-web/chat-wedding.webp" width="786" height="3502" alt="Conversation in Hype mode: planning a wedding" loading="lazy" />
+            </div>
+            <p class="hint">SCROLL INSIDE THE PHONE ↕</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 05 Takeaways ───────────── -->
+    <section class="cs-section">
+      <div class="cs-wrap">
+        <div class="cs-narrow">
+          <p class="label">// 05 — WHAT I TOOK AWAY</p>
+          <h2>The chart <em>is</em> the answer</h2>
+        </div>
+        <div class="learn">
+          <div><p class="n">01</p><h4>Design the loop, not two screens</h4><p>Home raises the question and Ask AI answers it. Ending every chat in an action that lands back on Home is what makes the two sides feel like one product.</p></div>
+          <div><p class="n">02</p><h4>One template scales</h4><p>Headline, visual, interaction, next step. Eight very different questions, and every answer still feels familiar.</p></div>
+          <div><p class="n">03</p><h4>Calm builds trust</h4><p>Hidden numbers, no shaming and a tone the user chooses. Money is personal, so the product should never make someone feel judged.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="cs-end dark">
+    <p class="label">// THANKS FOR READING</p>
+    <h2>Want to talk about <em>this</em> project?</h2>
+    <div class="cta-row">
+      <button class="btn btn-primary light copy-email" data-email="arshdeep24kaur@gmail.com">Email me <span aria-hidden="true">⧉</span></button>
+      <a class="btn light-outline" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn light-outline" href="index.html#projects">See other work →</a>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Copy email to clipboard (same behaviour as the home page)
+    const toast = document.querySelector('.toast');
+    document.querySelectorAll('.copy-email').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const email = btn.dataset.email;
+        try {
+          await navigator.clipboard.writeText(email);
+          toast.textContent = `Email copied — ${email}`;
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        } catch {
+          window.location.href = `mailto:${email}`;
+        }
+      });
+    });
+
+    // Tab-style switchers: weather states and conversations
+    const switcher = (tabSel, imgSel, key) => {
+      const tabs = document.querySelectorAll(tabSel);
+      const imgs = document.querySelectorAll(imgSel);
+      tabs.forEach((t) => t.addEventListener('click', () => {
+        tabs.forEach((x) => x.setAttribute('aria-selected', x === t));
+        imgs.forEach((i) => i.classList.toggle('show', i.dataset[key] === t.dataset[key]));
+        const screen = imgs[0].closest('.screen');
+        if (screen) screen.scrollTop = 0;
+      }));
+    };
+    switcher('.seg [data-w]', '.weather-phone [data-w]', 'w');
+    switcher('.qs [data-c]', '.viewer [data-c]', 'c');
+  </script>
+</body>
+</html>

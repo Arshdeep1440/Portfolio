@@ -14,6 +14,8 @@ A static site (plain HTML/CSS/JS, no build step). Open `index.html` in a browser
   sliced into `assets/case-studies/bytesafe-web/01.webp` … `07-end.webp` (the closing "Thankyou!" block is trimmed off) (very tall images can't be one web image).
 - **Flora & Fawn case study**: `flora-n-fawn.html` — written case study with live demos built from the
   exported Figma states in `assets/case-studies/flora-n-fawn-web/` (default/hover pairs, menus, carousel pages).
+- **Nudge case study**: `nudge.html` — written case study with a money-weather toggle and a conversation
+  explorer; screens in `assets/case-studies/nudge-web/` (from the Figma exports in `assets/case-studies/nudge/`).
 - **Project order**: the "Other work" cards appear left-to-right in the order they're listed in `index.html`.
 - **Projects**: each card in the "Other work" section links to `assets/case-studies/<name>.pdf`
   (placeholders for now — replace them keeping the filenames) and shows `assets/work/<name>.webp`.

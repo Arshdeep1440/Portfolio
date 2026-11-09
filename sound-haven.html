@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sound Haven — Arshdeep Kaur</title>
+  <meta name="description" content="Sound Haven: a landing page for an audio gear marketplace, designed by Arshdeep Kaur." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="case-study.css" />
+  <style>
+    body.sound { background: #262626; color: #f2f0eb; }
+    .sound .cs-bar { background: rgba(38,38,38,.88); border-bottom-color: #3a3a3a; }
+    .sound .cs-bar .back { color: #cfcac1; }
+    .sound .cs-bar .back:hover { color: #fff; }
+    .sound .cs-bar .btn { border-color: #5a5a5a; color: #f2f0eb; }
+    .sound .cs-bar .btn:hover { border-color: #f2f0eb; box-shadow: 3px 3px 0 #f2f0eb; }
+    .sound .cs-hero h1 em { color: #eef35a; }
+    .sound .cs-hero .lede { color: #c9c5bd; }
+    .sound .label { color: #eef35a; }
+    .browser { border-radius: 18px; overflow: hidden; background: #333; border: 1px solid #3f3f3f; box-shadow: 0 50px 100px -40px rgba(0,0,0,.7); margin-bottom: clamp(64px, 9vw, 110px); }
+    .browser-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #1d1d1d; }
+    .browser-bar i { width: 11px; height: 11px; border-radius: 50%; background: #444; }
+    .browser img { display: block; width: 100%; height: auto; }
+    .sound .cs-end { margin-top: 0; }
+  </style>
+</head>
+<body class="sound">
+
+  <header class="cs-bar">
+    <a class="back" href="index.html">← Arshdeep Kaur</a>
+    <span class="title">SOUND HAVEN</span>
+    <a class="btn" href="assets/Arshdeep_Kaur_CV.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+  </header>
+
+  <main>
+    <div class="cs-wrap cs-hero">
+      <p class="label">// WEB · AUDIO MARKETPLACE</p>
+      <h1>Sound <em>Haven</em></h1>
+      <p class="lede">A landing page for an audio marketplace: headphones, speakers and accessories, with categories, daily deals, a demo room and a blog.</p>
+    </div>
+    <div class="cs-wrap">
+      <div class="browser">
+        <div class="browser-bar"><i></i><i></i><i></i></div>
+        <img src="assets/case-studies/sound-haven-web/landing.webp" width="1440" height="3335" alt="Sound Haven landing page: hero 'Unleash the Perfect Sound', browse by category, deal of the day, demo room, blog and footer" />
+      </div>
+    </div>
+  </main>
+
+  <section class="cs-end dark">
+    <p class="label">// THANKS FOR LOOKING</p>
+    <h2>Want to talk about <em>this</em> project?</h2>
+    <div class="cta-row">
+      <button class="btn btn-primary light copy-email" data-email="arshdeep24kaur@gmail.com">Email me <span aria-hidden="true">⧉</span></button>
+      <a class="btn light-outline" href="https://www.linkedin.com/in/24arsh/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn light-outline" href="index.html#projects">See other work →</a>
+    </div>
+  </section>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const toast = document.querySelector('.toast');
+    document.querySelectorAll('.copy-email').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const email = btn.dataset.email;
+        try {
+          await navigator.clipboard.writeText(email);
+          toast.textContent = `Email copied — ${email}`;
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2000);
+        } catch {
+          window.location.href = `mailto:${email}`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

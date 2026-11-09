@@ -16,6 +16,9 @@ A static site (plain HTML/CSS/JS, no build step). Open `index.html` in a browser
   exported Figma states in `assets/case-studies/flora-n-fawn-web/` (default/hover pairs, menus, carousel pages).
 - **Nudge case study**: `nudge.html` — written case study with a money-weather toggle and a conversation
   explorer; screens in `assets/case-studies/nudge-web/` (from the Figma exports in `assets/case-studies/nudge/`).
+- **Battle Pass**: `battle-pass.html` (sketches, flows, wireframes, final screens) from `assets/case-studies/game/`.
+- **Sound Haven**: `sound-haven.html`, a single landing page from `assets/case-studies/audiomarketplace/`.
+- **Card hover colour**: each project card sets `style="--c:…"` in `index.html`.
 - **Project order**: the "Other work" cards appear left-to-right in the order they're listed in `index.html`.
 - **Projects**: each card in the "Other work" section links to `assets/case-studies/<name>.pdf`
   (placeholders for now — replace them keeping the filenames) and shows `assets/work/<name>.webp`.

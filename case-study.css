@@ -28,13 +28,13 @@
 
 /* Lavender stage that holds the phone screens */
 .stage {
-  background: linear-gradient(160deg, #e9e7f6, #d7d5ee);
+  background: linear-gradient(160deg, #eceef7, #d3d7ea);
   border-radius: 28px; padding: clamp(28px, 5vw, 64px) clamp(16px, 4vw, 48px);
   display: flex; justify-content: center; align-items: flex-start; gap: clamp(14px, 3vw, 40px);
 }
 .stage figure { flex: 0 1 300px; text-align: center; }
 .stage img { display: block; width: 100%; height: auto; border-radius: 34px; box-shadow: 0 30px 60px -30px rgba(40,40,90,.45); }
-.stage figcaption { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: #6a68a0; margin-top: 16px; }
+.stage figcaption { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: #5b6396; margin-top: 16px; }
 .stage.single img { border-radius: 14px; }
 .stage.single figure { flex-basis: 760px; }
 
@@ -73,7 +73,7 @@
 
 /* State walkthroughs: phone + annotations */
 .state { display: grid; grid-template-columns: 320px 1fr; gap: clamp(28px, 5vw, 72px); align-items: start; margin-top: 40px; }
-.state .phone { position: sticky; top: 90px; background: linear-gradient(160deg, #e9e7f6, #d7d5ee); border-radius: 28px; padding: 22px; }
+.state .phone { position: sticky; top: 90px; background: linear-gradient(160deg, #eceef7, #d3d7ea); border-radius: 28px; padding: 22px; }
 .state .phone img { display: block; width: 100%; height: auto; border-radius: 30px; box-shadow: 0 24px 50px -28px rgba(40,40,90,.45); }
 .state .day { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; color: var(--accent); }
 .state h3 { font-size: clamp(26px, 3vw, 36px); line-height: 1.15; letter-spacing: -.025em; margin: 8px 0 14px; font-weight: 600; }
